@@ -80,8 +80,7 @@ class MenuBar(tk.Menu):
         sys.exit(0)
 
 class FormBox(ttk.LabelFrame):
-   def __init__(self, master, output):
-        output = export_data()
+   def __init__(self, master):
         ttk.LabelFrame.__init__(self, master, text="Reloading Log")
     #Sets current date
         date_label = ttk.Label(self, text="Date")
@@ -109,10 +108,12 @@ class FormBox(ttk.LabelFrame):
         rounds_loaded_label = ttk.Label(self, text="Rounds")
         rounds_loaded_label.grid(column=11, row=0)
     #Form Input Boxes
-        to_day = datetime.datetime.now() #Gets current date
+        #Sets default current date
+        to_day = datetime.datetime.now()
         date_box = ttk.Entry(self,width=10)
         date_box.grid(column=0, row=1)
-        date_box.insert(0, to_day.strftime("%d%b%Y")) #sets default entry to current date.//
+        date_box.insert(0, to_day.strftime("%d%b%Y"))
+
         caliber_box = ttk.Entry(self)
         caliber_box.grid(column=1, row=1)
         bullet_MFG_box = ttk.Entry(self, width=10)
@@ -135,7 +136,7 @@ class FormBox(ttk.LabelFrame):
         primer_box.grid(column=10, row=1)
         rounds_loaded_Box = ttk.Entry(self,width=6)
         rounds_loaded_Box.grid(column=11, row=1)
-        
+
 class Counters(tk.LabelFrame):
     def __init__(self, master):
         tk.LabelFrame.__init__(self, master, text="Counts")
@@ -267,9 +268,8 @@ class App(tk.Frame):
         cammy.grid(column=0, row=1)  
         calls = Alarm(self.middle_frame)
         calls.grid(column=1, row=1)  
-        self.formy = Form_Control(self.middle_frame)
-        self.formy.
-        self.formy.grid(column=3, row=1)  
+        formy = Form_Control(self.middle_frame)
+        formy.grid(column=3, row=1)  
         self.middle_frame.grid(column=0, row=3)
 #Fourth Frame
         self.fourth_frame = tk.Frame(self)

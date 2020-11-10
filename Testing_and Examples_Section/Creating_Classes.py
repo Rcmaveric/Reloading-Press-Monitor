@@ -21,9 +21,6 @@ import csv
 import datetime
 
 '''
-with open('Reloading_Log.csv') as csvfile:
-    readCSV = csv.reader(csvfile, delimiter=',')
-
 #This is just a place holder for now
 class Cam1(tk.Toplevel):
     def __init__(self, parent):
@@ -51,8 +48,8 @@ class Cam2(tk.Toplevel):
 #Switching to a class based style to make code more organized.
 
 class MenuBar(tk.Menu):
-    def __init__(self, master):
-        tk.Menu.__init__(self, master)
+    def __init__(self, master, *args, **kwargs):
+        tk.Menu.__init__(self, master, *args, **kwargs)
         
         fileMenu = tk.Menu(self, tearoff=False)
         editMenu = tk.Menu(self, tearoff=False)
@@ -80,10 +77,10 @@ class MenuBar(tk.Menu):
         sys.exit(0)
 
 class FormBox(ttk.LabelFrame):
-   def __init__(self, master, output):
-        output = export_data()
-        ttk.LabelFrame.__init__(self, master, text="Reloading Log")
-    #Sets current date
+    def __init__(self, master, *args, **kwargs):
+        ttk.LabelFrame.__init__(self, master, text="Reloading Log", *args, **kwargs)
+    #Data Labels
+        self.master = master
         date_label = ttk.Label(self, text="Date")
         date_label.grid(column=0, row=0)
         caliber_label = ttk.Label(self, text="Caliber")
@@ -109,36 +106,37 @@ class FormBox(ttk.LabelFrame):
         rounds_loaded_label = ttk.Label(self, text="Rounds")
         rounds_loaded_label.grid(column=11, row=0)
     #Form Input Boxes
-        to_day = datetime.datetime.now() #Gets current date
-        date_box = ttk.Entry(self,width=10)
-        date_box.grid(column=0, row=1)
-        date_box.insert(0, to_day.strftime("%d%b%Y")) #sets default entry to current date.//
-        caliber_box = ttk.Entry(self)
-        caliber_box.grid(column=1, row=1)
-        bullet_MFG_box = ttk.Entry(self, width=10)
-        bullet_MFG_box.grid(column=2, row=1)
-        bullet_type_box = ttk.Entry(self, width=10)
-        bullet_type_box.grid(column=3, row=1)
-        powder_CHG_box = ttk.Entry(self, width=6)
-        powder_CHG_box.grid(column=4, row=1)
-        powder_type_box = ttk.Entry(self,width=10)
-        powder_type_box.grid(column=5, row=1)
-        powder_volume_Box = ttk.Entry(self,width=6)
-        powder_volume_Box.grid(column=6, row=1)
-        case_type = ttk.Entry(self,width=10)
-        case_type.grid(column=7, row=1)
-        case_length_Box = ttk.Entry(self,width=5)
-        case_length_Box.grid(column=8, row=1)
-        COAL_box = ttk.Entry(self,width=10)
-        COAL_box.grid(column=9, row=1)
-        primer_box = ttk.Entry(self,width=7)
-        primer_box.grid(column=10, row=1)
-        rounds_loaded_Box = ttk.Entry(self,width=6)
-        rounds_loaded_Box.grid(column=11, row=1)
+        to_day = datetime.datetime.now()
+        self.date_box = ttk.Entry(self,width=10)
+        self.date_box.grid(column=0, row=1)
+        self.date_box.insert(0, to_day.strftime("%d%b%Y")) #Sets default current date
+
+        self.caliber_box = ttk.Entry(self)
+        self.caliber_box.grid(column=1, row=1)
+        self.bullet_MFG_box = ttk.Entry(self, width=10)
+        self.bullet_MFG_box.grid(column=2, row=1)
+        self.bullet_type_box = ttk.Entry(self, width=10)
+        self.bullet_type_box.grid(column=3, row=1)
+        self.powder_CHG_box = ttk.Entry(self, width=6)
+        self.powder_CHG_box.grid(column=4, row=1)
+        self.powder_type_box = ttk.Entry(self,width=10)
+        self.powder_type_box.grid(column=5, row=1)
+        self.powder_volume_Box = ttk.Entry(self,width=6)
+        self.powder_volume_Box.grid(column=6, row=1)
+        self.case_type = ttk.Entry(self,width=10)
+        self.case_type.grid(column=7, row=1)
+        self.case_length_Box = ttk.Entry(self,width=5)
+        self.case_length_Box.grid(column=8, row=1)
+        self.COAL_box = ttk.Entry(self,width=10)
+        self.COAL_box.grid(column=9, row=1)
+        self.primer_box = ttk.Entry(self,width=7)
+        self.primer_box.grid(column=10, row=1)
+        self.rounds_loaded_Box = ttk.Entry(self,width=6)
+        self.rounds_loaded_Box.grid(column=11, row=1)
         
 class Counters(tk.LabelFrame):
-    def __init__(self, master):
-        tk.LabelFrame.__init__(self, master, text="Counts")
+    def __init__(self, master, *args, **kwargs):
+        tk.LabelFrame.__init__(self, master, text="Counts", *args, **kwargs)
         round_counted = tk.LabelFrame(self, text="Rounds")
         counted_rounds = tk.Label(round_counted, text="100", background="white")
         counted_rounds.pack(fill="both")
@@ -153,8 +151,8 @@ class Counters(tk.LabelFrame):
         case_reset_button.grid(column=0, row=1)
        
 class Logo(tk.Frame):
-    def __init__(self, master):
-        tk.Frame.__init__(self, master)
+    def __init__(self, master, *args, **kwargs):
+        tk.Frame.__init__(self, master, *args, **kwargs)
         self.master = master
         #Path to logo depends on OS. Windows needs Relative path while Linux requres exact.
         #image = Image.open("/home/pi/Documents/Reloading-Press-Monitor-main/Testing_and Examples_Section/logo2.png")
@@ -167,8 +165,8 @@ class Logo(tk.Frame):
         img.pack()
 
 class Powder(tk.LabelFrame):
-    def __init__(self, master):
-        tk.LabelFrame.__init__(self, master, text="Powder Level")
+    def __init__(self, master, *args, **kwargs):
+        tk.LabelFrame.__init__(self, master, text="Powder Level", *args, **kwargs)
         powder_level = tk.Label(self, text="50%")
         powder_level.pack(side ="bottom")
         bar = ttk.Progressbar(self, length=200)
@@ -176,8 +174,8 @@ class Powder(tk.LabelFrame):
         bar.pack(side ="top")
 
 class Cam_Control(tk.Frame):
-    def __init__(self, master):
-        tk.Frame.__init__(self, master)
+    def __init__(self, master, *args, **kwargs):
+        tk.Frame.__init__(self, master, *args, **kwargs)
         self.master = master
         cam1_btn = ttk.Button(self, text="Cam 1", command=None)
         cam1_btn.pack(side="left", padx=4, pady=4)
@@ -185,8 +183,8 @@ class Cam_Control(tk.Frame):
         cam2_btn.pack(side="left", padx=4, pady=4)
 
 class Alarm (tk.LabelFrame):
-    def __init__(self, master):
-        tk.LabelFrame.__init__(self, master, text="Cautions")
+    def __init__(self, master, *args, **kwargs):
+        tk.LabelFrame.__init__(self, master, text="Cautions", *args, **kwargs)
         #These will display in the order written and aligned to the left.
     #Alerts
       #Low Primers
@@ -216,20 +214,18 @@ class Alarm (tk.LabelFrame):
         low_bullet_label.pack(fill = "both")
 
 class Form_Control(tk.Frame):    
-    def __init__(self, master):
-        tk.Frame.__init__(self, master)        
+    def __init__(self, master, *args, **kwargs):
+        tk.Frame.__init__(self, master, *args, **kwargs)
+        self.master = master
         clear_btn = ttk.Button(self, text="Clear", command=None)
         clear_btn.pack(side="right", padx=4, pady=4)
-        export_btn = ttk.Button(self, text="Export", command =None)
-        export_btn.pack(side="right",padx=4, pady=4)
+        self.export_btn = ttk.Button(self, text="Export", command=None)
+        self.export_btn.pack(side="right",padx=4, pady=4)
     
 #Main Aplication Window to call in the classes
 class App(tk.Frame):
-    def __init__(self, master=None):
-        tk.Frame.__init__(self, master)
-#Menu Bar Called in.
-        #only tk has menus. Cannot be themed or styled.
-        
+    def __init__(self, master=None, *args, **kwargs):
+        tk.Frame.__init__(self, master, *args, **kwargs)
 #Layout Notes to self:
         #App Frames for organization of layout so you can see where I am going with the layout.
         #Sub frames will be created before thier widget contents. pictures are worth 1000 words.
@@ -247,10 +243,8 @@ class App(tk.Frame):
         self.first_frame = tk.Frame(self)
         welcome = tk.Label(self.first_frame, text="Welcome Rcmaveric, lets make some ammo!")
         welcome.pack(fill="both")
-        #motto = tk.Label(self.first_frame, text="O Dhia gach an cabhair!")
-        #motto.pack(fill="both")
         self.first_frame.grid(column=0, row= 0)
-#Middle Container:
+#Middle Container: grid aligns the middle widgets.
         self.middle_frame = tk.Frame(self)
   #Second Frame:  
     #Counter        
@@ -268,15 +262,20 @@ class App(tk.Frame):
         calls = Alarm(self.middle_frame)
         calls.grid(column=1, row=1)  
         self.formy = Form_Control(self.middle_frame)
-        self.formy.
         self.formy.grid(column=3, row=1)  
         self.middle_frame.grid(column=0, row=3)
 #Fourth Frame
         self.fourth_frame = tk.Frame(self)
-        forms = FormBox(self.fourth_frame)
-        forms.pack()
+        self.forms = FormBox(self.fourth_frame)
+        self.forms.pack()
         self.fourth_frame.grid(column=0, row=4)
 #Commands
+        #self.formy.export_btn.command(self.Write_To_File())
+    def Write_To_File(self):
+        with open('3_2_Reloading_Log.csv', 'a') as f:
+            w=csv.writer(f, delimiter=',')
+            w.writerow([self.forms.date_box.get()])
+
 
 
 if __name__ == "__main__":
@@ -288,5 +287,6 @@ if __name__ == "__main__":
     root.config(menu=menubar)
     style = ThemedStyle()
     style.set_theme("clearlooks")
+    menubar.mainloop()
     app.mainloop()
     root.mainloop()
