@@ -5,7 +5,7 @@ This is a work in progress and I am inexperienced with github and python so bare
 
 GUI_Working: This is the working GUI.
 
--1_Old_Guizero: These were made with guizero. They have no functionality. I couldnt figure out how to incorporate OPencv. So left this as reference and tos how learning progression.
+-1_Old_Guizero: These were made with guizero. They have no functionality. I couldnt figure out how to incorporate OPencv. So left this as reference and to show learning progression.
 -2_Old_Tkinter: This is where i converted guizero code into tkinter code. Wasnt hard and slightly intuitive. Starting to wonder if I should go back to this. Create the static widgets and call them in. Then have the functional widgets in one place.
 -3_1_Class_TK_Gui: I converted the old tkinter into a class basesd writing style. I was hoping to add better readability. Adding funtionality its proving to be hard. Thought I would start with the forma data export functionality.... Three days and still havent gotten it to work. 
     3_2_Relaoding_Log: This is just an example of the output.
@@ -15,9 +15,11 @@ GUI_Working: This is the working GUI.
 
 Sensors Folder: Where all the working sensors
 
--Open_Press_Count.py. I have only gotten the counters with reset working, and the powder and primer vibe motors working. Trying to figure out how to get a third switch programmed in to start and stop the counter. ***UPDate: Thanks to Jmorris from Cast Bullets for the primer counter idea. Stolen and imnplemted. S1 counts rounds up from zero and primers down from 100 and pulses the primer and powder vibrator motors. S2 resets round counter and S3 resets Primer counter back to 100 (user defined so change if you want). Need to add another switch to pause counter. 
+-Open_Press_Count.py. Code works as it should. ***UPDate: Thanks to Jmorris from Cast Bullets for the primer counter idea. Stolen and imnplemted. S1 counts rounds up from zero and primers down from 100 and pulses the primer and powder vibrator motors. S2 resets round counter and S3 resets Primer counter back to 100 (user defined so change if you want). Need to add another switch to pause counter. 
 
 -low_primer_warning: Event timed trigger solved. Code is working good now. Once light is sensed for 3 seconds the alarm is raised. This will prevent false alarms during primer feeding. ***Idea: use this code as a template to make code for case feeder and bullet feeder. Then if light is sensed for longer tha 8 seconds a low bullet and case allarm goes off.
+
+-There are single relay operations if one just wants to drive a single relay.
 
 Idea Folder:
 -GUI picture is GUI i plan on making.
@@ -25,6 +27,8 @@ Idea Folder:
 -RPI_curcuit.cddx: A curcuit diagram file to show how i am currently wired up
 -RPI_circut: a picture of the above file. Its my wire schematic.
 
+Examples and testing:
+-This where i keep all the examples and test files i have been using. There is a copy of the 3_1_TkinterGui i keep for referen. Tkinter with classes is the file i am activel editing for functionality..... cant figure out a simple form export at the moment.
 
 
 Usefull Links:
