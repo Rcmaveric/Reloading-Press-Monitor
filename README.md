@@ -3,19 +3,23 @@ This is a great under taking taken by a Newb with zero experince. Press monitori
 
 This is a work in progress and I am inexperienced with github and python so bare with me as I learn. Critics, ideas, and pointers are welcome. I wanted something so i am making it and shareing. Plus the fun of creating something. The end goal is to have something modular and easy to understand that anyone with any level of experience can pick up and enter some user defined inputs and have press monitor to suit their needs for any style press.
 
-GUI_Working: This is the working GUI.
+GUI_Working: This is code that is working. As of thise time it is none functional.
 
--1_Old_Guizero: These were made with guizero. They have no functionality. I couldnt figure out how to incorporate OPencv. So left this as reference and tos how learning progression.
+-1_Old_Guizero: These were made with guizero. They have no functionality. I couldnt figure out how to incorporate OPencv. So left this as reference and tos show coding learning progression.
 -2_Old_Tkinter: This is where i converted guizero code into tkinter code. Wasnt hard and slightly intuitive. Starting to wonder if I should go back to this. Create the static widgets and call them in. Then have the functional widgets in one place.
 -3_1_Class_TK_Gui: I converted the old tkinter into a class basesd writing style. I was hoping to add better readability. Adding funtionality its proving to be hard. Thought I would start with the forma data export functionality.... Three days and still havent gotten it to work. 
-    3_2_Relaoding_Log: This is just an example of the output.
-    3_3_Cartridge_Recipe: This i just an example of the recipe data base the user can define and call in to prefill entry widgets.
+    3_2_Relaoding_Log: This is just an example of the output I am trying to get.
+    3_3_Cartridge_Recipe: This is just an example i created of the recipe data base the user can define and call in to prefill entry widgets.
 -TK_Cam.py: An example to use for later so i can create tkinter cam frames. Lets you veiw one webcam currently.
 -View_2.py: Lets you view two webcams at once via OpenCV. You may need to check the labeling of your capture device. I use VLC to see which capture device is which. This is if you just want to see two webcams at once. Requires OpenCV to be installed.
 
 Sensors Folder: Where all the working sensors
 
--Open_Press_Count.py. I have only gotten the counters with reset working, and the powder and primer vibe motors working. Trying to figure out how to get a third switch programmed in to start and stop the counter. ***UPDate: Thanks to Jmorris from Cast Bullets for the primer counter idea. Stolen and imnplemted. S1 counts rounds up from zero and primers down from 100 and pulses the primer and powder vibrator motors. S2 resets round counter and S3 resets Primer counter back to 100 (user defined so change if you want). Need to add another switch to pause counter. 
+-Open_Press_Count.py. It all works great except i havent figured out how to start and stop the count with another switch. Thanks to Jmorris from Cast Bullets for the primer counter idea. Stolen and imnplemted. S1 counts rounds up from zero and primers down from 100 and pulses the primer and powder vibrator motors. S2 resets round counter and S3 resets Primer counter back to 100 (user defined so change if you want). Need to add another switch to pause counter.
+
+-Bullet_and_Case_Feeder: Controls two relays at once so you can feed your cases and bullets.
+
+-Bullet or Case_Feeder_Control: Just single relay operation for cases or bullets.
 
 -low_primer_warning: Event timed trigger solved. Code is working good now. Once light is sensed for 3 seconds the alarm is raised. This will prevent false alarms during primer feeding. ***Idea: use this code as a template to make code for case feeder and bullet feeder. Then if light is sensed for longer tha 8 seconds a low bullet and case allarm goes off.
 
@@ -25,7 +29,8 @@ Idea Folder:
 -RPI_curcuit.cddx: A curcuit diagram file to show how i am currently wired up
 -RPI_circut: a picture of the above file. Its my wire schematic.
 
-
+Testing and Examples:
+This is my experimentation folder where i am actively changing and trying to get things to work. I all ready crashed my Raspberry Pi twic and figured a repository sync would help me not loose all my data again. Also contains a collection of examples I am using to help. Most of the examples are from stack exchange and the GPIO examples come from PiMyLife. Thanks to those members and sites for letting me lurk. Full credit goes to them and their members.
 
 Usefull Links:
 -Link to Thingivers for Lee Low Primer warning sensor houseing.KPK3iF gets full credit for creating it. I tested it and it works great. You just drill a small throught the primer feeder trough:  https://www.thingiverse.com/thing:4303576

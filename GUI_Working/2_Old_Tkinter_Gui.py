@@ -73,18 +73,19 @@ Case_reset_button.grid(column=0, row=1)
 pause_button = Button(Counter_box,text="Pause")
 pause_button.grid(column=3, row=1)
 #Logo
-path = '/home/pi/Documents/Reloading-Press-Monitor-main/GUI/logo2.png' #make sure image path is exact
+#path = 'C:\Users\rcmav\Dropbox\Reloading-Press-Monitor\GUI_Working\logo2.png' # Linux make sure image path is exact
+path = 'GUI_Working\logo2.png' #Windows make sure image path is exact
 img = ImageTk.PhotoImage(Image.open(path))
 logo = Label(Count_PWDLV_Box, image = img)
 logo.grid(column=1, row=0, padx=4, pady=10)
+
 # Powder Level
 Powder_Level_Info = LabelFrame(Count_PWDLV_Box, text="Powder Level")
 Powder_Level_Info.grid(column=2, row=0, padx=4, pady=10)
 Powder_Level = Label(Powder_Level_Info, text="50%")
 Powder_Level.pack(side = BOTTOM, fill = Y)
-#Powder Level 
 bar = Progressbar(Powder_Level_Info, length=200)
-bar['value'] = 50
+bar['value'] = 50 #This will be the powerder
 bar.pack(side = TOP)
 
 
