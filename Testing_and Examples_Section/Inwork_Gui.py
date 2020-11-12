@@ -20,6 +20,21 @@ from ttkthemes import ThemedStyle
 import csv
 import datetime
 
+#Created a Load data class
+class Current_Load_Data():
+    def __init__(self, date, caliber, bullet_mfg, bullet_type, pwd_charge, powder_type, powder_volume,
+                 case_type, case_length, coal, primer, round_count):
+        self.date = date
+        self.caliber = caliber 
+        self.bullet_mfg = bullet_mfg
+        self.bullet_type = bullet_type
+        self.pwd_charge = pwd_charge
+        self.powder_type = powder_type 
+        self.powder_volume = powder_volume 
+        self.case_type = case_type
+        self.case_length = case_length
+        self.coal, primer = coal, primer
+        self.round_count = round_count
 
 class Cam1(tk.Toplevel):
     def __init__(self, master):
@@ -75,7 +90,7 @@ class MenuBar(tk.Menu):
         sys.exit(0)
 
 class FormBox(ttk.LabelFrame):
-   def __init__(self, master):
+    def __init__(self, master):
         ttk.LabelFrame.__init__(self, master, text="Reloading Log")
         self.master = master
     #Form Labels]
@@ -131,23 +146,26 @@ class FormBox(ttk.LabelFrame):
         self.primer_box.grid(column=10, row=1)
         self.rounds_loaded_Box = ttk.Entry(self,width=6)
         self.rounds_loaded_Box.grid(column=11, row=1)
-    #Output
-   def Get_Export(self):
-        return self.date_box.get()
 
-"""     
-self.caliber_box.get(),
-self.bullet_MFG_box.get(),
-self.bullet_type_box.get(),
-self.powder_CHG_box.get(),
-self.powder_type_box.get(),
-self.powder_volume_Box.get(),
-self.case_type.get(),
-self.case_length_Box.get(),
-self.COAL_box.get(),
-self.primer_box.get(),
-self.rounds_loaded_Box.get()]
-"""
+    #Add our data to a class to retrieve latter.
+    def Load_Data_Fetcher(self):
+        date = self.date_box.get() 
+        caliber = self.caliber_box.get()  
+        bullet_mfg = self.bullet_MFG_box.get() 
+        bullet_type = self.bullet_type_box.get()
+        pwd_charge = self.powder_CHG_box.get()
+        powder_type = self.powder_type_box.get() 
+        powder_volume = self.powder_volume_Box.get() 
+        case_type = self.case_type.get()
+        case_length = self.case_length_Box.get()
+        coal = self.COAL_box.get() 
+        primer = self.primer_box.get()
+        round_count = self.rounds_loaded_Box.get()
+        return Current_Load_Data(date, caliber, bullet_mfg, bullet_type, pwd_charge, powder_type,
+                                powder_volume, case_type, case_length, coal, primer, round_count)
+
+    def Clear_Load_data(self):
+         pass
 
 class Counters(tk.LabelFrame):
     def __init__(self, master):
@@ -231,25 +249,30 @@ class Alarm (tk.LabelFrame):
         low_bullet_label.pack(fill = "both")
 
 class Form_Control(tk.Frame):    
-    def __init__(self, master):
+    def __init__(self, master, export, clear):
         tk.Frame.__init__(self, master)
         self.master = master
-        self.clear_btn = ttk.Button(self, text="Clear", command=self.Clear_Form())
+        self.export = export
+        self.clear = clear
+        self.clear_btn = ttk.Button(self, text="Clear", command=self.clear)
         self.clear_btn.pack(side="right", padx=4, pady=4)
-        self.export_btn = ttk.Button(self, text="Export", command=self.Write_To_File())
+        self.export_btn = ttk.Button(self, text="Export", command=self.export)
         self.export_btn.pack(side="right",padx=4, pady=4)
     
     def Clear_Form(self):
         pass
-        
+    
     def Write_To_File(self):
         pass
-    
+   
 #Main Aplication Window to call in the classes
-class App(tk.Frame):
-    def __init__(self, master=None):
-        tk.Frame.__init__(self, master)
-        self.master = master
+class App(tk.Tk):
+    def __init__(self):
+        super().__init__()
+        self.title("AMMMO Computer")
+        self.menubar = MenuBar(self)
+        self.config(menu=self.menubar)
+        
 #Layout Notes to self:
         #App Frames for organization of layout so you can see where I am going with the layout.
         #Sub frames will be created before thier widget contents. pictures are worth 1000 words.
@@ -284,7 +307,7 @@ class App(tk.Frame):
         self.cammy.grid(column=0, row=1)  
         self.calls = Alarm(self.middle_frame)
         self.calls.grid(column=1, row=1)  
-        self.formy = Form_Control(self.middle_frame)
+        self.formy = Form_Control(self.middle_frame, clear=self.Clear_Form, export= self.Write_To_File)
         self.formy.grid(column=3, row=1)  
         self.middle_frame.grid(column=0, row=3)
 #Fourth Frame
@@ -292,27 +315,20 @@ class App(tk.Frame):
         self.forms = FormBox(self.fourth_frame)
         self.forms.pack()
         self.fourth_frame.grid(column=0, row=4)
+        
 #Commands
-
-    def Fetch_Load_Data(self):
-        self.date_fetcher = self.forms.Get_Export
+    def Write_To_File(self):
+        self.load_data = self.forms.Load_Data_Fetcher()
+        with open('Reloading_Log.csv', 'a') as f:
+            w=csv.writer(f, quoting=csv.QUOTE_ALL)
+            w.writerow([self.load_data])
 
     def Clear_Form(self):
         pass
-        
-    def Write_To_File(self):
-        with open('test.csv', 'a') as f:
-            w=csv.writer(f, quoting=csv.QUOTE_ALL)
-            w.writerow([self.date_fetcher])
 
 if __name__ == "__main__":
-    root=tk.Tk()
-    root.title('Ammo Computer')
-    app=App(root)
-    app.pack(side="top", fill="both", expand=True)
-    menubar = MenuBar(root)
-    root.config(menu=menubar)
+    app=App()
     style = ThemedStyle()
-    style.set_theme("clearlooks")
+    style.set_theme("breeze")
     app.mainloop()
-    root.mainloop()
+    
