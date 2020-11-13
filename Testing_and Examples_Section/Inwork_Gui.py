@@ -33,7 +33,8 @@ class Current_Load_Data():
         self.powder_volume = powder_volume 
         self.case_type = case_type
         self.case_length = case_length
-        self.coal, primer = coal, primer
+        self.coal = coal, 
+        self.primer = primer
         self.round_count = round_count
 
 class Cam1(tk.Toplevel):
@@ -90,7 +91,7 @@ class MenuBar(tk.Menu):
         sys.exit(0)
 
 class FormBox(ttk.LabelFrame):
-    def __init__(self, master):
+    def __init__(self, master):        
         ttk.LabelFrame.__init__(self, master, text="Reloading Log")
         self.master = master
     #Form Labels]
@@ -168,7 +169,7 @@ class FormBox(ttk.LabelFrame):
          pass
 
 class Counters(tk.LabelFrame):
-    def __init__(self, master):
+    def __init__(self, master,):
         tk.LabelFrame.__init__(self, master, text="Counts")
         self.master = master
         round_counted = tk.LabelFrame(self, text="Rounds")
@@ -317,11 +318,15 @@ class App(tk.Tk):
         self.fourth_frame.grid(column=0, row=4)
         
 #Commands
+  
     def Write_To_File(self):
-        self.load_data = self.forms.Load_Data_Fetcher()
+        load_data = self.forms.Load_Data_Fetcher()
         with open('Reloading_Log.csv', 'a') as f:
             w=csv.writer(f, quoting=csv.QUOTE_ALL)
-            w.writerow([self.load_data])
+            w.writerow([load_data.date, load_data.caliber, load_data.bullet_mfg, load_data.bullet_type,
+                        load_data.pwd_charge, load_data.powder_type, load_data.powder_volume, 
+                        load_data.case_type, load_data.case_length, load_data.coal, load_data.primer, 
+                        load_data.round_count])
 
     def Clear_Form(self):
         pass
