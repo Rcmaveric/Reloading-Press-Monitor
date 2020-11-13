@@ -1,7 +1,10 @@
 # Reloading-Press-Monitor
+
+A disclaimer: Most of the code is found on the internet. I just copy and pasted and messed with it till it worked. Half the time I barely know what I am doing. Most of my electronics experience is analog systems. Those are easy atleast for me. Most of the code in my examples comes from stack exchange. I personally feel bad for not citing the actually owners of the code. The logo I am currently using is to one of my favorite websites. They own it and I found it on Google images. You can change it to what ever you like or a family crest or any other personal logo. The code will automatically resize it.
+
 This is a great under taking taken by a Newb with zero experince. Press monitoring computers have been around for a while now, but are expensive in the 500 to 2k dollar range. Why not make a customisable one for less than 200 bucks.
 
-This is a work in progress and I am inexperienced with github and python so bare with me as I learn. Critics, ideas, and pointers are welcome. I wanted something so i am making it and shareing. Plus the fun of creating something. The end goal is to have something modular and easy to understand that anyone with any level of experience can pick up and enter some user defined inputs and have press monitor to suit their needs for any style press.
+This is a work in progress and I am inexperienced with github and python so bare with me as I learn. Critiques, ideas, and pointers are welcome. I wanted something so i am making it and shareing. Plus the fun of creating something. The end goal is to have something modular and easy to understand that anyone with any level of experience can pick up and enter some user defined inputs and have press monitor to suit their needs for any style press.
 
 GUI_Working: This is code that is working. As of thise time it is none functional.
 
@@ -11,8 +14,8 @@ GUI_Working: This is code that is working. As of thise time it is none functiona
 -2_Old_Tkinter: This is where i converted guizero code into tkinter code. Wasnt hard and slightly intuitive. Starting to wonder if I should go back to this. Create the static widgets and call them in. Then have the functional widgets in one place.
 
 -3_1_Class_TK_Gui: I converted the old tkinter into a class basesd writing style. I was hoping to add better readability. Adding funtionality its proving to be hard. Thought I would start with the forma data export functionality.... Three days and still havent gotten it to work.
- -3_2_Relaoding_Log: This is just an example of the output I am trying to get.
- -3_3_Cartridge_Recipe: This is just an example i created of the recipe data base the user can define and call in to prefill entry widgets.
+-3_2_Relaoding_Log: This is where the form is logged.
+-3_3_Cartridge_Recipe: This is just an example i created of the recipe data base the user can define and call in to prefill entry widgets.
 
 -TK_Cam.py: An example to use for later so i can create tkinter cam frames. Lets you veiw one webcam currently.
 -View_2.py: Lets you view two webcams at once via OpenCV. You may need to check the labeling of your capture device. I use VLC to see which capture device is which. This is if you just want to see two webcams at once. Requires OpenCV to be installed.
@@ -34,7 +37,7 @@ Idea Folder:
 -RPI_circut: a picture of the above file. Its my wire schematic.
 
 Examples and testing:
--This where i keep all the examples and test files i have been using. There is a copy of the 3_1_TkinterGui i keep for referen. Tkinter with classes is the file i am activel editing for functionality..... cant figure out a simple form export at the moment.
+-This where i keep all the examples and test files I have been using. There is a copy of the 3_1_TkinterGui i keep for reference. Tkinter with classes is the file I am activel editing.
 
 
 Usefull Links:
