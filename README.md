@@ -19,7 +19,9 @@ Sensors Folder: Where all the working sensors
 
 -low_primer_warning: Event timed trigger solved. Code is working good now. Once light is sensed for 3 seconds the alarm is raised. This will prevent false alarms during primer feeding. ***Idea: use this code as a template to make code for case feeder and bullet feeder. Then if light is sensed for longer tha 8 seconds a low bullet and case allarm goes off.
 
--There are single relay operations if one just wants to drive a single relay.
+-Bullet_and_Case_Feeder.py: This will operate the case feeder and bullet feeder at once with two relays.
+
+-There are single relay operations if one just wants to drive a single relay. Files named accoredingly becuase my bullet and case feeders are wired differently.
 
 Idea Folder:
 -GUI picture is GUI i plan on making.
