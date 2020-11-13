@@ -16,9 +16,11 @@ import tkinter as tk
 import sys
 from tkinter import ttk
 from PIL import Image, ImageTk
+import PIL.Image, PIL.ImageTk
 from ttkthemes import ThemedStyle
 import csv
 import datetime
+import cv2
 
 #Created a Load data class
 class Current_Load_Data():
@@ -37,29 +39,63 @@ class Current_Load_Data():
         self.primer = primer
         self.round_count = round_count
 
-class Cam1(tk.Toplevel):
-    def __init__(self, master):
-        tk.Toplevel.__init__(self, master)
+#when calling the cams. The new window will be a assigned to a Top Level Widget. You assigne the camera input during the
+#Construction.
+class Cam(tk.Frame):
+    def __init__(self, master, window, window_title, video_source=0):
         self.master = master
-        #Path has to be exact to logo image
-        image = Image.open("GUI_Working/primer.jpg")
-        #Resize loaded image.
-        render = ImageTk.PhotoImage(image)
-        self.img = tk.Label(self, image=render)
-        self.img.image = render #may seam silly... but this is so that the photo stays stored in memory, if not Python may trash it
-        self.img.pack()
+        self.window = window
+        self.window.title(window_title)
+        self.video_source = video_source
 
-class Cam2(tk.Toplevel):
-    def __init__(self, master):
-        tk.Toplevel.__init__(self, master)
-        self.master = master
-        #Path has to be exact to logo image
-        image = Image.open("GUI_Working/primer.png")
-        #Resize loaded image.
-        render = ImageTk.PhotoImage(image)
-        self.img = tk.Label(self, image=render)
-        self.img.image = render #may seam silly... but this is so that the photo stays stored in memory, if not Python may trash it
-        self.img.pack()
+        # open video source (by default this will try to open the computer webcam)
+        self.vid = MyVideoCapture(self.video_source)
+ 
+        # Create a canvas that can fit the above video source size
+        self.canvas = tk.Canvas(window, width = self.vid.width, height = self.vid.height)
+        self.canvas.pack()
+ 
+        # After it is called once, the update method will be automatically called every delay milliseconds
+        self.delay = 15
+        self.update()
+ 
+            
+    def update(self):
+        # Get a frame from the video source
+        ret, frame = self.vid.get_frame()
+
+        if ret:
+            self.photo = PIL.ImageTk.PhotoImage(image = PIL.Image.fromarray(frame))
+            self.canvas.create_image(0, 0, image = self.photo, anchor = tk.NW)
+
+        self.window.after(self.delay, self.update)
+
+class MyVideoCapture:
+    def __init__(self, video_source=0):
+        # Open the video source
+        self.vid = cv2.VideoCapture(video_source)
+        if not self.vid.isOpened():
+            raise ValueError("Unable to open video source", video_source)
+
+        # Get video source width and height
+        self.width = self.vid.get(cv2.CAP_PROP_FRAME_WIDTH)
+        self.height = self.vid.get(cv2.CAP_PROP_FRAME_HEIGHT)
+
+    def get_frame(self):
+        if self.vid.isOpened():
+            ret, frame = self.vid.read()
+            if ret:
+                # Return a boolean success flag and the current frame converted to BGR
+                return (ret, cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
+            else:
+                return (ret, None)
+        else:
+            return (ret, None)
+
+    # Release the video source when the object is destroyed
+    def __del__(self):
+        if self.vid.isOpened():
+            self.vid.release()
         
 class MenuBar(tk.Menu):
     def __init__(self, master):
@@ -220,12 +256,14 @@ class Powder(tk.LabelFrame):
         bar.pack(side ="top")
 
 class Cam_Control(tk.Frame):
-    def __init__(self, master):
+    def __init__(self, master, cam1, cam2):
         tk.Frame.__init__(self, master)
         self.master = master
-        cam1_btn = ttk.Button(self, text="Cam 1", command=None)
+        self.cam1 = cam1
+        self.cam2 = cam2
+        cam1_btn = ttk.Button(self, text="Cam 1", command=self.cam1)
         cam1_btn.pack(side="left", padx=4, pady=4)
-        cam2_btn = ttk.Button(self, text="Cam 2", command=None)
+        cam2_btn = ttk.Button(self, text="Cam 2", command=self.cam2)
         cam2_btn.pack(side="left", padx=4, pady=4)
 
 class Alarm (tk.LabelFrame):
@@ -310,7 +348,7 @@ class App(tk.Tk):
         level = Powder(self.middle_frame)
         level.grid(column=3, row=0)  
   #Third Frame
-        self.cammy = Cam_Control(self.middle_frame)
+        self.cammy = Cam_Control(self.middle_frame, cam1=self.Cam1_Toggle, cam2=self.Cam2_Toggle)
         self.cammy.grid(column=0, row=1)  
         self.calls = Alarm(self.middle_frame)
         self.calls.grid(column=1, row=1)  
@@ -324,6 +362,14 @@ class App(tk.Tk):
         self.fourth_frame.grid(column=0, row=4)
         
 #Commands
+
+    def Cam1_Toggle(self):
+        self.camera1_window = tk.Toplevel(self)
+        self.camera1 = Cam(self, window=self.camera1_window, window_title="Cam1", video_source=0)
+
+    def Cam2_Toggle(self):
+        self.camera2_window = tk.Toplevel(self)
+        self.camera2 = Cam(self, window=self.camera2_window, window_title="Cam1", video_source=1)
   
     def Write_To_File(self):
         load_data = self.forms.Load_Data_Fetcher()

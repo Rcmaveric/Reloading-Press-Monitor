@@ -5,11 +5,15 @@ This is a work in progress and I am inexperienced with github and python so bare
 
 GUI_Working: This is code that is working. As of thise time it is none functional.
 
+***Functional Working update: The form clear button works and the form export buttons work. The CAM 1 and CAM2 buttons now work. Make sure you assign them to the correct camera.
+
 -1_Old_Guizero: These were made with guizero. They have no functionality. I couldnt figure out how to incorporate OPencv. So left this as reference and to show learning progression.
 -2_Old_Tkinter: This is where i converted guizero code into tkinter code. Wasnt hard and slightly intuitive. Starting to wonder if I should go back to this. Create the static widgets and call them in. Then have the functional widgets in one place.
--3_1_Class_TK_Gui: I converted the old tkinter into a class basesd writing style. I was hoping to add better readability. Adding funtionality its proving to be hard. Thought I would start with the forma data export functionality.... Three days and still havent gotten it to work. 
+-3_1_Class_TK_Gui: I converted the old tkinter into a class basesd writing style. I was hoping to add better readability. Adding funtionality its proving to be hard. Thought I would start with the forma data export functionality.... Three days and still havent gotten it to work.
+
     3_2_Relaoding_Log: This is just an example of the output I am trying to get.
     3_3_Cartridge_Recipe: This is just an example i created of the recipe data base the user can define and call in to prefill entry widgets.
+
 -TK_Cam.py: An example to use for later so i can create tkinter cam frames. Lets you veiw one webcam currently.
 -View_2.py: Lets you view two webcams at once via OpenCV. You may need to check the labeling of your capture device. I use VLC to see which capture device is which. This is if you just want to see two webcams at once. Requires OpenCV to be installed.
 
