@@ -33,7 +33,7 @@ class Current_Load_Data():
         self.powder_volume = powder_volume 
         self.case_type = case_type
         self.case_length = case_length
-        self.coal = coal, 
+        self.coal = coal 
         self.primer = primer
         self.round_count = round_count
 
@@ -166,7 +166,18 @@ class FormBox(ttk.LabelFrame):
                                 powder_volume, case_type, case_length, coal, primer, round_count)
 
     def Clear_Load_data(self):
-         pass
+        self.date_box.delete(0, tk.END)
+        self.caliber_box.delete(0, tk.END)
+        self.bullet_MFG_box.delete(0, tk.END)
+        self.bullet_type_box.delete(0, tk.END)
+        self.powder_CHG_box.delete(0, tk.END)
+        self.powder_type_box.delete(0, tk.END)
+        self.powder_volume_Box.delete(0, tk.END)
+        self.case_type.delete(0, tk.END)
+        self.case_length_Box.delete(0, tk.END)
+        self.COAL_box.delete(0, tk.END)
+        self.primer_box.delete(0, tk.END)
+        self.rounds_loaded_Box.delete(0, tk.END)
 
 class Counters(tk.LabelFrame):
     def __init__(self, master,):
@@ -260,12 +271,6 @@ class Form_Control(tk.Frame):
         self.export_btn = ttk.Button(self, text="Export", command=self.export)
         self.export_btn.pack(side="right",padx=4, pady=4)
     
-    def Clear_Form(self):
-        pass
-    
-    def Write_To_File(self):
-        pass
-   
 #Main Aplication Window to call in the classes
 class App(tk.Tk):
     def __init__(self):
@@ -277,15 +282,16 @@ class App(tk.Tk):
 #Layout Notes to self:
         #App Frames for organization of layout so you can see where I am going with the layout.
         #Sub frames will be created before thier widget contents. pictures are worth 1000 words.
-        #              /-----------------------------------/
-        # First Frame  /        Welcome Message            /
-        #              /-----------_--/----/---------------/ 
-        # Second Frame /  Counter    /Logo/  Powder Level  /
-        #              /--------_--//----/----/------------/
-        # Third Frame  /Cam Button/ Cautions / Form Buttons/
-        #              /---------/----------/--------------/
-        #/Fourth Fram  / / / / / / /Form/ / / / / / / / /  /
-        #              /-----------------------------------/        
+        #              /---------------------------------------/
+        # First Frame  /        Welcome Message                /
+        # Middle Cont. / /-----------------------------------/ /
+        # Second Frame / /Counter    /  Logo   /  Powder Lvl / /
+        #              / /----------//--------/-/------------/ /
+        # Third Frame  / /Cam Button/ Cautions / Form Buttons/ /
+        #              / /---------/----------/--------------/ /
+        # Fourth Fram  / / / / / / /Form/ / / /  / / / /  /  / /
+        #              /---------------------------------------/     
+         
 #First Frame: I like my computer to great me. Makes me feel needed.
         self.first_frame = tk.Frame(self)
         welcome = tk.Label(self.first_frame, text="Welcome Rcmaveric, lets make some ammo!")
@@ -308,7 +314,7 @@ class App(tk.Tk):
         self.cammy.grid(column=0, row=1)  
         self.calls = Alarm(self.middle_frame)
         self.calls.grid(column=1, row=1)  
-        self.formy = Form_Control(self.middle_frame, clear=self.Clear_Form, export= self.Write_To_File)
+        self.formy = Form_Control(self.middle_frame, clear= lambda: self.forms.Clear_Load_data(), export= self.Write_To_File)
         self.formy.grid(column=3, row=1)  
         self.middle_frame.grid(column=0, row=3)
 #Fourth Frame
@@ -327,9 +333,6 @@ class App(tk.Tk):
                         load_data.pwd_charge, load_data.powder_type, load_data.powder_volume, 
                         load_data.case_type, load_data.case_length, load_data.coal, load_data.primer, 
                         load_data.round_count])
-
-    def Clear_Form(self):
-        pass
 
 if __name__ == "__main__":
     app=App()
