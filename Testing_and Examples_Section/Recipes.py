@@ -134,10 +134,33 @@ class Recipe_Editor(tk.Frame):
             w.writerow([ba, bb, bc, bd, be, bf, bg, bh, bi, bj]) #Adds to file.
             self.row = self.tree.insert("","end",values=(ba, bb,bc,bd,be, bf, bg, bh, bi, bj)) #Updates the tree
     
-    def Remove_Item(self): #Only removes selected item from tree
-        selected_items = self.tree.selection()        
-        for selected_item in selected_items:          
-             self.tree.delete(selected_item)#Removes selected item from tree
+    def Remove_Item(self):
+        """
+        def Remove_Item_From_Tree(self):
+            self.selected_items = self.tree.selection()
+            for selected_item in self.selected_items:        
+                self.tree.delete(selected_item)#Removes selected item from tree
+        """
+        def updatefile(updatedlist):
+                with open("3_3_Cartridge_Recipe.csv","w",newline="") as f:
+                    Writer=csv.writer(f)
+                    Writer.writerows(updatedlist)
+                    print("File has been updated")
+        #1. 
+        updatedlist=[]
+        with open("3_3_Cartridge_Recipe.csv", newline="") as f:
+            reader=csv.reader(f)
+            recipe=self.tree.focus 
+            for row in reader: #for every row in the file
+                if row[0]!=recipe: #as long as the username is not in the row .......
+                    updatedlist.append(row) #add each row, line by line, into a list called 'udpatedlist'
+            print(updatedlist)
+            updatefile(updatedlist)
+            
+            
+
+                  
+            
 
 if __name__ == "__main__":
 
