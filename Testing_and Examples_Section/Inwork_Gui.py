@@ -45,7 +45,7 @@ class Recipe_Editor(tk.Frame):
         self.window = window
         self.window.title(window_title)
     #Frame that hold TreeView
-        self.data_display = tk.Frame(self)
+        self.data_display = tk.Frame(window)
         self.data_display.pack(side="top")
         self.TableMargin = tk.Frame(self.data_display)
         self.TableMargin.pack(side="right")         
@@ -100,7 +100,7 @@ class Recipe_Editor(tk.Frame):
         self.tree.pack()
 
     #Frame to hold the Data Entry form.
-        self.data_input_frame = ttk.Labelframe(self, text="Add New Recipe")
+        self.data_input_frame = ttk.Labelframe(window, text="Add New Recipe")
      #Labels
         self.cartridge_label = tk.Label(self.data_input_frame, text="Cartridge")
         self.cartridge_label.grid(column=0, row=0)
@@ -523,8 +523,7 @@ class App(tk.Tk):
   
     def Pet_Loads_Log(self):
         self.recipes_window = tk.Toplevel(self)
-        self.Recipe_Editor(self, window=self.recipes_window, window_title="Load Editor")
-        self.Recipe_Editor.pack()
+        self.recipe_editor = Recipe_Editor(self.recipes_window, window=self.recipes_window, window_title="Load Editor")
 
     def Write_To_File(self):
         load_data = self.forms.Load_Data_Fetcher()
