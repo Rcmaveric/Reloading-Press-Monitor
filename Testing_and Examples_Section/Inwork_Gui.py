@@ -11,6 +11,8 @@ Email:      rcmaveric112@gmail.com
 Note:       Reason for all the comments: I am learning and reminders help. Also for others to learn.
             Most importantly, I use VSC and it allows nesting by comments. I can colapse the lines between
             comments to make the navigation of code easier. 
+
+Contributors: The various 
 '''
 import tkinter as tk
 import sys

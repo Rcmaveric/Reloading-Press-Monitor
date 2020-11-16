@@ -8,7 +8,7 @@ This is a work in progress and I am inexperienced with github and python so bare
 
 GUI_Working: This is code that is working. As of thise time it is none functional.
 
-***Functional Working update: The form clear button works and the form export buttons work. The CAM 1 and CAM2 buttons now work. Make sure you assign them to the correct camera.
+***Functional Working update: The form clear button works and the form export buttons work. The CAM 1 and CAM2 buttons now work. Make sure you assign them to the correct camera. Recipe editor now works on the Loads menu Add/Remove
 
 -1_Old_Guizero: These were made with guizero. They have no functionality. I couldnt figure out how to incorporate OPencv. So left this as reference and to show learning progression.
 -2_Old_Tkinter: This is where i converted guizero code into tkinter code. Wasnt hard and slightly intuitive. Starting to wonder if I should go back to this. Create the static widgets and call them in. Then have the functional widgets in one place.
@@ -37,7 +37,7 @@ Idea Folder:
 -RPI_circut: a picture of the above file. Its my wire schematic.
 
 Examples and testing:
--This where i keep all the examples and test files I have been using. There is a copy of the 3_1_TkinterGui i keep for reference. Tkinter with classes is the file I am activel editing.
+-This where i keep all the examples and test files I have been using. There is a copy of the 3_1_TkinterGui i keep for reference.Inwork_Gui.Py is the file I am activel editing.
 
 
 Usefull Links:
