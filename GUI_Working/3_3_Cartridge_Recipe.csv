@@ -1,1 +1,5 @@
-357M,0.357,Lee Cast,PC RNFP,4g,2400,2cc,RP,0.95,1.2,WSP
+"cartridge","caliber","bullet","bullet_type","charge","powder_type","charge_volume","case","case_Length","coal","primer"
+"357M","0.357","Lee Cast","PC RNFP","4g","2400","2cc","RP",".96","1.2","WSP"
+"9mm",".357","Lee Cast","TC PC","2.5G","Tight Group",".4cc","mixed",".25",".96","WSP"
+"270",".278","Lee","Lubed RNFP","18G"","RX7","3.5cc","Winchester","2.5","3","WLR"
+"6.5G",".266","NOE","Lubed RNFP","12.5G"","Buff. Bore","2CC","LC",".75","1.3","WLR"
