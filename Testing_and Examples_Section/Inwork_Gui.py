@@ -6,13 +6,14 @@ Licensing:  Do what you but you can't sell it. It stays open source with source 
 IRL Name:   Ryan Conner
 Email:      rcmaveric112@gmail.com
             I barely know what I am doing and Google and stack exchange will help you more than me. LMAO most of this code
-            is copy pasted and lucky extropilated guesses. Yes, i faked it till i made. XD
+            is copy pasted and lucky extropilated guesses. 
 
 Note:       Reason for all the comments: I am learning and reminders help. Also for others to learn.
             Most importantly, I use VSC and it allows nesting by comments. I can colapse the lines between
             comments to make the navigation of code easier. 
 
-Contributors: The various 
+Contributors: The various awesome post from StackOverflow. I wouldnt have been able to get this far 
+              without them. 
 '''
 import tkinter as tk
 import sys
@@ -41,22 +42,6 @@ with open('3_3_Cartridge_Recipe.csv', 'r', newline='') as f:
 
     Recipe = [Recipe(**row) for row in reader]
 
-class Current_Load_Data(): # This is no longer neccassary, will rewrite lattar. Needs to stay for function.
-                           # Function needs to be written before  removal                         
-    def __init__(self, date, caliber, bullet_mfg, bullet_type, pwd_charge, powder_type, powder_volume,
-                 case_type, case_length, coal, primer, round_count):
-        self.date = date
-        self.caliber = caliber 
-        self.bullet_mfg = bullet_mfg
-        self.bullet_type = bullet_type
-        self.pwd_charge = pwd_charge
-        self.powder_type = powder_type 
-        self.powder_volume = powder_volume 
-        self.case_type = case_type
-        self.case_length = case_length
-        self.coal = coal 
-        self.primer = primer
-        self.round_count = round_count
 
 class Recipe_Editor(tk.Frame):
     def __init__(self, master, window, window_title):                
@@ -196,7 +181,7 @@ class Recipe_Editor(tk.Frame):
             w=csv.writer(f, quoting=csv.QUOTE_ALL)
             w.writerow([ba, bb, bz, bc, bd, be, bf, bg, bh, bi, bj]) #Adds to file. Only writes the new line.
             self.row = self.tree.insert("","end",values=(ba, bb, bz, bc,bd,be, bf, bg, bh, bi, bj)) #Updates the tree
-    
+        
     def Remove_Item(self): #Removes row from tree. Then overwrites CSV file with new tree.
         def Update_Recipe_File(self):#To over write CSV with new Treeview
             with open('3_3_Cartridge_Recipe.csv', 'w', newline='') as f:

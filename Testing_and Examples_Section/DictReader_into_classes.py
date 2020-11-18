@@ -24,6 +24,7 @@ with open('3_3_Cartridge_Recipe.csv', 'r', newline='') as f:
             return('{}({})'.format(self.__class__.__name__, fields))
 
     Recipe = [Recipe(**row) for row in reader]
+    print(Recipe)
 
 
 
@@ -90,7 +91,7 @@ class FormBox(ttk.LabelFrame):
         self.button_frame = tk.Frame(self)
         self.clear_btn = ttk.Button(self.button_frame, text="Clear", command=self.Clear_Load_data)
         self.clear_btn.grid(column=0, row=0)
-        self.export_btn = ttk.Button(self.button_frame, text="Export", command=None)
+        self.export_btn = ttk.Button(self.button_frame, text="Export", command=print(Recipe))
         self.export_btn.grid(column=3, row=0)
 
         self.combo_frame = tk.Frame(self.button_frame)
