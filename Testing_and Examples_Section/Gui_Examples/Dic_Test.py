@@ -5,16 +5,13 @@ from collections import namedtuple
 
 
 def CSV_List():
-    #open file in read mode
-    with open('3_3_Cartridge_Recipe.csv', 'r', newline='') as f:
-        recipe_list = []
-        #pass the file object to dict reader to get dictionary
-        reader = csv.DictReader(f)
-        for i in reader:
-           recipe_list.append(i)
-        return recipe_list
+    data='Recipe'(list)
+    with open('data.csv','rb') as data_file:
+        reader=csv.DictReader(data_file)
+        for row in reader:
+            Recipe[row]
+            data.append(Recipe)
 
-        #print(recipe_list)
+        print(data)
 
-recipies = CSV_List()
-print(recipies[0]['cartridge'])
+

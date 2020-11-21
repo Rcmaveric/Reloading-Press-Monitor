@@ -40,9 +40,26 @@ with open('3_3_Cartridge_Recipe.csv', 'r', newline='') as f:
                                    for fieldname in fieldnames))
             return('{}({})'.format(self.__class__.__name__, fields))
 
-    Recipe = [Recipe(**row) for row in reader]
+    Loads = [Recipe(**row) for row in reader]
+    
+    def Recipe_Update():
+        Loads.clear()
+        with open('3_3_Cartridge_Recipe.csv', 'r', newline='') as f:
+            reader = csv.DictReader(f)
+            fieldnames = reader.fieldnames
 
+            class Recipe:
+                def __init__(self, **fields):
+                    self.__dict__.update(**fields)
 
+                def __repr__(self):  # Added to make printing instances show their contents.
+                    fields = ','.join(('{}={!r}'.format(fieldname, getattr(self, fieldname))
+                                        for fieldname in fieldnames))
+                    return('{}({})'.format(self.__class__.__name__, fields))
+
+            new = ([Recipe(**row) for row in reader])
+            Loads.extend(new)
+ 
 class Recipe_Editor(tk.Frame):
     def __init__(self, master, window, window_title):                
         self.master = master
@@ -351,7 +368,7 @@ class FormBox(ttk.LabelFrame):
         self.combo_frame = tk.Frame(self.button_frame)
         self.load_select_label = tk.Label(self.combo_frame, text="Pet Loads")
         self.load_select_label.grid(row=0, column=0)
-        self.load_select = ttk.Combobox(self.combo_frame, width=25, value = Recipe)
+        self.load_select = ttk.Combobox(self.combo_frame, width=25, value = Loads)
         self.load_select.bind("<<ComboboxSelected>>", self.Combo_Entry)
         self.load_select.grid(column=1, row=0)
         self.combo_frame.grid(column=2, row=0)
@@ -424,6 +441,19 @@ class FormBox(ttk.LabelFrame):
                         pwd_charge, powder_type, powder_volume, 
                         case_type, case_length, coal, primer, 
                         round_count])
+
+    def Combo_Update(self):
+        self.load_select['value'] = Loads
+
+    def Also_Combo_Update(self):
+        self.load_select.destroy
+        self.load_select = ttk.Combobox(self.combo_frame, width=25, value = Loads)
+        self.load_select.bind("<<ComboboxSelected>>", self.Combo_Entry)
+        self.load_select.grid(column=1, row=0)
+    
+
+    
+    
 
 class Counters(tk.LabelFrame):
     def __init__(self, master,):
@@ -560,6 +590,11 @@ class App(tk.Tk):
         self.fourth_frame.grid(column=0, row=4)
         
 #Commands
+    def Update_Close(self):
+        Recipe_Update()
+        self.forms.Combo_Update()
+        self.recipes_window.destroy()
+
 
     def Cam1_Toggle(self):
         self.camera1_window = tk.Toplevel(self)
@@ -571,8 +606,11 @@ class App(tk.Tk):
   
     def Pet_Loads_Log(self):
         self.recipes_window = tk.Toplevel(self)
-        self.recipe_editor = Recipe_Editor(self.recipes_window, window=self.recipes_window, window_title="Load Editor")
-
+        self.recipes_window.protocol("WM_DELETE_WINDOW", self.Update_Close)
+        self.recipe_editor = Recipe_Editor(self.recipes_window, 
+                                           window=self.recipes_window, 
+                                           window_title="Load Editor")
+        
 if __name__ == "__main__":
     app=App()
     style = ThemedStyle()
