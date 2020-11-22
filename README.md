@@ -6,19 +6,35 @@ This is a great under taking taken by a Newb with zero experince. Press monitori
 
 This is a work in progress and I am inexperienced with github and python so bare with me as I learn. Critiques, ideas, and pointers are welcome. I wanted something so i am making it and shareing. Plus the fun of creating something. The end goal is to have something modular and easy to understand that anyone with any level of experience can pick up and enter some user defined inputs and have press monitor to suit their needs for any style press.
 
-GUI_Working: This is code that is working. As of thise time it is none functional.
+GUI_Working: This is code that is working. As of thise time it is not fully functional. 
+As of right now the functionality is as follows:
 
-***Functional Working update: The form clear button works and the form export buttons work. The CAM 1 and CAM2 buttons now work. Make sure you assign them to the correct camera. Recipe editor now works on the Loads menu Add/Remove
+    -1_Old_Guizero: These were made with guizero. They have no functionality. I couldnt figure out how to incorporate OPencv. So left this as reference and to show learning progression.
 
--1_Old_Guizero: These were made with guizero. They have no functionality. I couldnt figure out how to incorporate OPencv. So left this as reference and to show learning progression.
--2_Old_Tkinter: This is where i converted guizero code into tkinter code. Wasnt hard and slightly intuitive. Starting to wonder if I should go back to this. Create the static widgets and call them in. Then have the functional widgets in one place.
+    -2_Old_Tkinter: This is where i converted guizero code into tkinter code. Wasnt hard and slightly intuitive. Starting to wonder if I should go back to this. Create the static widgets and call them in. Then have the functional widgets in one place.
 
--3_1_Class_TK_Gui: I converted the old tkinter into a class basesd writing style. I was hoping to add better readability. Adding funtionality its proving to be hard. Thought I would start with the forma data export functionality.... Three days and still havent gotten it to work.
--3_2_Relaoding_Log: This is where the form is logged.
--3_3_Cartridge_Recipe: This is just an example i created of the recipe data base the user can define and call in to prefill entry widgets.
+    -3_1_Class_TK_Gui: I converted the old tkinter into a class basesd writing style. I was hoping to add better readability. Adding funtionality its proving to be hard. 
 
--TK_Cam.py: An example to use for later so i can create tkinter cam frames. Lets you veiw one webcam currently.
--View_2.py: Lets you view two webcams at once via OpenCV. You may need to check the labeling of your capture device. I use VLC to see which capture device is which. This is if you just want to see two webcams at once. Requires OpenCV to be installed.
+        Functionality is as follows:
+
+            The forms works. You can clear and save reloading log into csv. App has its own log which you can copy and paste out of. You may also use the file, copy selection to copy your data to clip boards and the simply paste int your own excel or open office file.
+
+            - The recipe editor works and updates the pet loads drop down. You can edit your pet loads file your self with your favorite excel eqavent program. You must save as CSV file format though. Onboard editor works 4.0 though.
+
+            - Both camera buttons work. You must verify your cam buttons device numbers. Plug two usb cams in and see what they are. Then manually input those numbers. Current defaults are 0 and 1. Thats what mine are. 
+
+            -I have not written user manual yet. The file and functionality is there for when I get everything done. This will be the last thing I do.
+
+            -Working on starting the GPIO intgreation.
+
+    -3_2_Relaoding_Log: This is where the form is logged.
+
+    -3_3_Cartridge_Recipe: This is just an example i created of the recipe data base the user can define and call in to prefill entry widgets.
+
+
+    -TK_Cam.py: An example to use for later so i can create tkinter cam frames. Lets you veiw one webcam currently.
+
+    -View_2.py: Lets you view two webcams at once via OpenCV. You may need to check the labeling of your capture device. I use VLC to see which capture device is which. This is if you just want to see two webcams at once. Requires OpenCV to be installed.
 
 Sensors Folder: Where all the working sensors
 
