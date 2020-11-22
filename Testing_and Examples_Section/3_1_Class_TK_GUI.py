@@ -17,12 +17,15 @@ Contributors: The various awesome post from StackOverflow. I wouldnt have been a
 '''
 import tkinter as tk
 import sys
-from tkinter import ttk
+from tkinter import ttk, messagebox
 from PIL import Image, ImageTk
 from ttkthemes import ThemedStyle
+import os
 import csv
 import datetime
 import cv2
+import platform
+import subprocess
 
 #Note to self: the way this works is the csv is turned into a class. The class name is the list ID which is Recipe[n],
 #where N is the number of the recipe line with 0 being the first line. After that the heading can be use as a dot atribut,
@@ -275,29 +278,40 @@ class MyVideoCapture:
             self.vid.release()
         
 class MenuBar(tk.Menu):
-    def __init__(self, master, add_remove):
+    def __init__(self, master, add_remove, clip_board_copy):
         tk.Menu.__init__(self, master)
         self.add_remove = add_remove
+        self.clip_board_copy = clip_board_copy
         fileMenu = tk.Menu(self, tearoff=False)
-        editMenu = tk.Menu(self, tearoff=False)
-        loadsMenu = tk.Menu(self, tearoff=True)
+        loadsMenu = tk.Menu(self, tearoff=False)
         helpMenu = tk.Menu(self, tearoff=False)
         self.add_cascade(label="File",underline=0, menu=fileMenu)
-        fileMenu.add_command(label="Copy", underline=0, command=None)
+        fileMenu.add_command(label="Copy", underline=0, command=clip_board_copy)
         fileMenu.add_command(label="Save", underline=0, command=None)
         fileMenu.add_command(label="Exit", underline=1, command=self.quit)
-        self.add_cascade(label="Edit",underline=0, menu=editMenu)
-        editMenu.add_command(label="Logo", underline=0, command=None)
-        editMenu.add_command(label="Directories", underline=0, command=None)
-        editMenu.add_command(label="Theme", underline=0, command=None)
         self.add_cascade(label="Loads", underline=0, menu=loadsMenu)
         loadsMenu.add_command(label="Add/Remove", underline=0, command=add_remove)
         self.add_cascade(label="Help", underline=0, menu=helpMenu)
-        helpMenu.add_command(label="User Manual", underline=0, command=None)
-        helpMenu.add_command(label="About", underline=0, command=None)
+        helpMenu.add_command(label="User Manual", underline=0, command = lambda: Open_User_Man())
+        helpMenu.add_command(label="About", underline=0, 
+                            command= lambda: messagebox.showinfo("Welcome", 
+                            "I am RCMaveric and this is the Ammo Plant Monitor"+'\n'+
+                            "My name is Ryan Conner and this is my attempt at programing"+'\n'+
+                            "I saw a need and wanted to atempt to fill it."+'\n'+
+                            "Enjoy and I hope you like. Feel free to adjust the code and make it yours."+'\n'+
+                            "Email: Rcmaveric@Gmail.com"))
 
     def quit(self):
         sys.exit(0)
+
+def Open_User_Man(): #To Open the user Manual. Not yet created
+    filepath = 'C:\\Users\\rcmav\\Dropbox\\Reloading-Press-Monitor\\User_Manual_PDF.pdf'
+    if platform.system() == 'Darwin':       # macOS
+        subprocess.call(('open', filepath))
+    elif platform.system() == 'Windows':    # Windows
+        os.startfile(filepath)
+    else:                                   # linux variants
+        subprocess.call(('xdg-open', filepath))
 
 class FormBox(ttk.LabelFrame):
     def __init__(self, master):        
@@ -407,7 +421,6 @@ class FormBox(ttk.LabelFrame):
         self.COAL_box.insert(0, self.dictionary["coal"])
         self.primer_box.insert(0, self.dictionary["primer"])
 
-
     def Clear_Load_data(self):
         self.caliber_box.delete(0, tk.END)
         self.bullet_MFG_box.delete(0, tk.END)
@@ -420,7 +433,6 @@ class FormBox(ttk.LabelFrame):
         self.COAL_box.delete(0, tk.END)
         self.primer_box.delete(0, tk.END)
         self.rounds_loaded_Box.delete(0, tk.END)
-    
     
     def Write_To_File(self):
         date = self.date_box.get() 
@@ -441,20 +453,30 @@ class FormBox(ttk.LabelFrame):
                         pwd_charge, powder_type, powder_volume, 
                         case_type, case_length, coal, primer, 
                         round_count])
+    
+    def Write_Load_To_ClipBoard(self):
+        za= self.date_box.get() 
+        zb = self.caliber_box.get()  
+        zc = self.bullet_MFG_box.get() 
+        zd = self.bullet_type_box.get()
+        ze = self.powder_CHG_box.get()
+        zf = self.powder_type_box.get() 
+        zg = self.powder_volume_Box.get() 
+        zh = self.case_type.get()
+        zi = self.case_length_Box.get()
+        zj = self.COAL_box.get() 
+        zk = self.primer_box.get()
+        zl = self.rounds_loaded_Box.get()
+        n = za+'\t'+zb+'\t'+zc+'\t'+zd+'\t'+ze+'\t'+zf+'\t'+zg+'\t'+zh+'\t'+zi+'\t'+zj+'\t'+zk+'\t'+zl
+        clip = tk.Tk()
+        clip.withdraw()
+        clip.clipboard_clear()
+        clip.clipboard_append(n)  #Change INFO_TO_COPY to the name of your data source
+        clip.destroy()
 
     def Combo_Update(self):
         self.load_select['value'] = Loads
-
-    def Also_Combo_Update(self):
-        self.load_select.destroy
-        self.load_select = ttk.Combobox(self.combo_frame, width=25, value = Loads)
-        self.load_select.bind("<<ComboboxSelected>>", self.Combo_Entry)
-        self.load_select.grid(column=1, row=0)
     
-
-    
-    
-
 class Counters(tk.LabelFrame):
     def __init__(self, master,):
         tk.LabelFrame.__init__(self, master, text="Counts")
@@ -544,9 +566,7 @@ class App(tk.Tk):
     def __init__(self):
         super().__init__()
         self.title("AMMMO Computer")
-        self.menubar = MenuBar(self, add_remove=self.Pet_Loads_Log)
-        self.config(menu=self.menubar)
-        
+
 #Layout Notes to self:
         #App Frames for organization of layout so you can see where I am going with the layout.
         #Sub frames will be created before thier widget contents. pictures are worth 1000 words.
@@ -559,7 +579,7 @@ class App(tk.Tk):
         #              / /---------/----------/--------------/ /
         # Fourth Fram  / / / / / / /Form/ / / /  / / / /  /  / /
         #              /---------------------------------------/     
-         
+
 #First Frame: I like my computer to great me. Makes me feel needed.
         self.first_frame = tk.Frame(self)
         welcome = tk.Label(self.first_frame, text="Welcome Rcmaveric, lets make some ammo!")
@@ -588,7 +608,8 @@ class App(tk.Tk):
         self.forms = FormBox(self.fourth_frame)
         self.forms.pack()
         self.fourth_frame.grid(column=0, row=4)
-        
+        self.menubar = MenuBar(self, add_remove=self.Pet_Loads_Log, clip_board_copy=self.forms.Write_Load_To_ClipBoard)
+        self.config(menu=self.menubar)
 #Commands
     def Update_Close(self):
         Recipe_Update()

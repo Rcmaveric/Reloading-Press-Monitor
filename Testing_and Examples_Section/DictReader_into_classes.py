@@ -25,7 +25,7 @@ with open('3_3_Cartridge_Recipe.csv', 'r', newline='') as f:
             return('{}({})'.format(self.__class__.__name__, fields))
 
     Loads = [Recipe(**row) for row in reader]
-    print (Loads)
+   
     
     def Recipe_Update():
         Loads.clear()
@@ -267,7 +267,7 @@ class FormBox(ttk.LabelFrame):
         self.button_frame = tk.Frame(self)
         self.clear_btn = ttk.Button(self.button_frame, text="Clear", command=lambda: self.Editor())
         self.clear_btn.grid(column=0, row=0)
-        self.export_btn = ttk.Button(self.button_frame, text="Export", command=lambda:self.Combo_Update())
+        self.export_btn = ttk.Button(self.button_frame, text="Export", command=lambda: self.Write_Load_To_ClipBoard())
         self.export_btn.grid(column=3, row=0)
 
         self.combo_frame = tk.Frame(self.button_frame)
@@ -329,6 +329,45 @@ class FormBox(ttk.LabelFrame):
     def Editor(self):
         self.new_window = tk.Toplevel(self)
         self.editor_of_recipes = Recipe_Editor(self, window=self.new_window, window_title="Editor")
+
+    def Get_Loads(self):
+        date = self.date_box.get() 
+        caliber = self.caliber_box.get()  
+        bullet_mfg = self.bullet_MFG_box.get() 
+        bullet_type = self.bullet_type_box.get()
+        pwd_charge = self.powder_CHG_box.get()
+        powder_type = self.powder_type_box.get() 
+        powder_volume = self.powder_volume_Box.get() 
+        case_type = self.case_type.get()
+        case_length = self.case_length_Box.get()
+        coal = self.COAL_box.get() 
+        primer = self.primer_box.get()
+        round_count = self.rounds_loaded_Box.get()
+        return (date, caliber, bullet_mfg, bullet_type,
+                pwd_charge, powder_type, powder_volume, 
+                case_type, case_length, coal, primer, 
+                round_count)
+    
+    def Write_Load_To_ClipBoard(self):
+        za= self.date_box.get() 
+        zb = self.caliber_box.get()  
+        zc = self.bullet_MFG_box.get() 
+        zd = self.bullet_type_box.get()
+        ze = self.powder_CHG_box.get()
+        zf = self.powder_type_box.get() 
+        zg = self.powder_volume_Box.get() 
+        zh = self.case_type.get()
+        zi = self.case_length_Box.get()
+        zj = self.COAL_box.get() 
+        zk = self.primer_box.get()
+        zl = self.rounds_loaded_Box.get()
+        n =za+'\t'+zb+'\t'+zc+'\t'+zd+'\t'+ze+'\t'+zf+'\t'+zg+'\t'+zh+'\t'+zi+'\t'+zj+'\t'+zk+'\t'+zl
+        clip = tk.Tk()
+        clip.withdraw()
+        clip.clipboard_clear()
+        clip.clipboard_append(n)  #Change INFO_TO_COPY to the name of your data source
+        clip.destroy()
+
      
 #Main Aplication Window to call in the classes
 class App(tk.Tk):
