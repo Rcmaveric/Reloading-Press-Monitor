@@ -4,7 +4,7 @@ A disclaimer: Most of the code is found on the internet. I just copy and pasted 
 
 This is a great under taking taken by a Newb with zero experince. Press monitoring computers have been around for a while now, but are expensive in the 500 to 2k dollar range. Why not make a customisable one for less than 200 bucks.
 
-This is a work in progress and I am inexperienced with github and python so bare with me as I learn. Critiques, ideas, and pointers are welcome. I wanted something so i am making it and shareing. Plus the fun of creating something. The end goal is to have something modular and easy to understand that anyone with any level of experience can pick up and enter some user defined inputs and have press monitor to suit their needs for any style press.
+This is a work in progress and I am inexperienced with github and python so bare with me as I learn. Critiques, ideas, and pointers are welcome. I wanted something so I am making it and shareing. Plus the fun of creating something. The end goal is to have something modular and easy to understand that anyone with any level of experience can pick up and enter some user defined inputs and have press monitor to suit their needs for any style press.
 
 GUI_Working: This is code that is working. As of thise time it is not fully functional. 
 As of right now the functionality is as follows:
@@ -25,9 +25,10 @@ As of right now the functionality is as follows:
 
             -I have not written user manual yet. The file and functionality is there for when I get everything done. This will be the last thing I do.
 
-            -Working on starting the GPIO intgreation.
+            -Current GPIO functionality: Counters work and export correctly. Motors vibrate correctly.
+            Inwork Functionality: Case Feeder, Bullet Feeder and alerts.
 
-    -3_2_Relaoding_Log: This is where the form is logged.
+    -3_2_Relaoding_Log: This is where the form is logged. Removed count entry and count is now pulled from the count box.
 
     -3_3_Cartridge_Recipe: This is just an example i created of the recipe data base the user can define and call in to prefill entry widgets.
 
