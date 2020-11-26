@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+
 import cv2
 
 video_capture_0 = cv2.VideoCapture(0)

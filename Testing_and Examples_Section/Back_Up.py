@@ -35,10 +35,6 @@ S2 = Button(8)
 S3 = Button(7)
 M1 = PWMOutputDevice(16, frequency=400)
 M2 = PWMOutputDevice(13, frequency=400)
-ldr = LightSensor(4)  
-# For Passive buzzers, little buzzer best at 2500HZ, Larger 3000hz
-#buzzer = PWMOutputDevice(23, frequency=2500)
-#buzzer = PWMOutputDevice(18, frequency=3000)
 
 
 #Note to self: the way this works is the csv is turned into a class. The class name is the list ID which is Recipe[n],
@@ -328,12 +324,11 @@ def Open_User_Man(): #To Open the user Manual. Not yet created
         subprocess.call(('xdg-open', filepath))
 
 class FormBox(ttk.LabelFrame):
-    def __init__(self, master, count):        
+    def __init__(self, master):        
         ttk.LabelFrame.__init__(self, master, text="Reloading Log")
         self.master = master
         self.formz_frame = tk.Frame(self)
-        self.count = count
-     #Form Labels
+    #Form Labels
         date_label = ttk.Label(self.formz_frame, text="Date")
         date_label.grid(column=0, row=0)
         caliber_label = ttk.Label(self.formz_frame, text="Caliber")
@@ -356,9 +351,9 @@ class FormBox(ttk.LabelFrame):
         COAL_label.grid(column=9, row=0)
         primer_label = ttk.Label(self.formz_frame, text="Primer")
         primer_label.grid(column=10, row=0)
-        
-        
-     #Form Input Boxes
+        rounds_loaded_label = ttk.Label(self.formz_frame, text="Rounds")
+        rounds_loaded_label.grid(column=11, row=0)
+    #Form Input Boxes
         #Sets default current date
         to_day = datetime.datetime.now() # Retreve current date.
         self.date_box = ttk.Entry(self.formz_frame,width=10)
@@ -384,12 +379,16 @@ class FormBox(ttk.LabelFrame):
         self.COAL_box.grid(column=9, row=1)
         self.primer_box = ttk.Entry(self.formz_frame,width=7)
         self.primer_box.grid(column=10, row=1)
-        self.formz_frame.grid(column=0, row=0)
+        self.rounds_loaded_Box = ttk.Entry(self.formz_frame,width=6)
+        self.rounds_loaded_Box.grid(column=11, row=1)
+        self.formz_frame.grid(column=0, row=0)   
+    
         self.button_frame = tk.Frame(self)
         self.clear_btn = ttk.Button(self.button_frame, text="Clear", command=self.Clear_Load_data)
         self.clear_btn.grid(column=0, row=0)
         self.export_btn = ttk.Button(self.button_frame, text="Export", command=self.Write_To_File)
         self.export_btn.grid(column=3, row=0)
+
         self.combo_frame = tk.Frame(self.button_frame)
         self.load_select_label = tk.Label(self.combo_frame, text="Pet Loads")
         self.load_select_label.grid(row=0, column=0)
@@ -397,8 +396,10 @@ class FormBox(ttk.LabelFrame):
         self.load_select.bind("<<ComboboxSelected>>", self.Combo_Entry)
         self.load_select.grid(column=1, row=0)
         self.combo_frame.grid(column=2, row=0)
-        self.button_frame.grid(column=0, row=2)
 
+        self.button_frame.grid(column=0, row=2, )
+   
+    
     def Combo_Entry(self, eventObject):
         self.Clear_Load_data()
         #This Code magically turns our string back into a Dictionary
@@ -410,6 +411,7 @@ class FormBox(ttk.LabelFrame):
         # first remove the () from it
         s = qq.replace("(", " ")
         finalstring = s.replace(")"," ")
+        
         list = finalstring.split(",")
         self.dictionary={}
         for i in list:
@@ -440,7 +442,8 @@ class FormBox(ttk.LabelFrame):
         self.case_length_Box.delete(0, tk.END)
         self.COAL_box.delete(0, tk.END)
         self.primer_box.delete(0, tk.END)
- 
+        self.rounds_loaded_Box.delete(0, tk.END)
+    
     def Write_To_File(self):
         date = self.date_box.get() 
         caliber = self.caliber_box.get()  
@@ -453,7 +456,7 @@ class FormBox(ttk.LabelFrame):
         case_length = self.case_length_Box.get()
         coal = self.COAL_box.get() 
         primer = self.primer_box.get()
-        round_count = self.count()
+        round_count = self.rounds_loaded_Box.get()
         with open('3_2_Reloading_Log.csv', 'a', newline='') as f:
             w=csv.writer(f, quoting=csv.QUOTE_ALL)
             w.writerow([date, caliber, bullet_mfg, bullet_type,
@@ -473,12 +476,12 @@ class FormBox(ttk.LabelFrame):
         zi = self.case_length_Box.get()
         zj = self.COAL_box.get() 
         zk = self.primer_box.get()
-        zl = self.count()
+        zl = self.rounds_loaded_Box.get()
         n = za+'\t'+zb+'\t'+zc+'\t'+zd+'\t'+ze+'\t'+zf+'\t'+zg+'\t'+zh+'\t'+zi+'\t'+zj+'\t'+zk+'\t'+zl
         clip = tk.Tk()
         clip.withdraw()
         clip.clipboard_clear()
-        clip.clipboard_append(n) 
+        clip.clipboard_append(n)  #Change INFO_TO_COPY to the name of your data source
         clip.destroy()
 
     def Combo_Update(self):
@@ -534,10 +537,6 @@ class Counters(tk.LabelFrame):
         #Triggers Count
         self.Round_Ticker()
         self.Primer_Ticker()
-    
-    def Get_Rounds(self):
-        self.value = self.round_count.get()
-        return self.value
     
 class Logo(tk.Frame):
     def __init__(self, master):
@@ -649,17 +648,17 @@ class App(tk.Tk):
         self.middle_frame.grid(column=0, row=3)
 #Fourth Frame
         self.fourth_frame = tk.Frame(self)
-        self.forms = FormBox(self.fourth_frame, count=self.counter_box.round_count.get)
+        self.forms = FormBox(self.fourth_frame)
         self.forms.pack()
         self.fourth_frame.grid(column=0, row=4)
-        self.menubar = MenuBar(self, add_remove=self.Pet_Loads_Log,
-                               clip_board_copy=self.forms.Write_Load_To_ClipBoard)
+        self.menubar = MenuBar(self, add_remove=self.Pet_Loads_Log, clip_board_copy=self.forms.Write_Load_To_ClipBoard)
         self.config(menu=self.menubar)
 #Commands
     def Update_Close(self):
         Recipe_Update()
         self.forms.Combo_Update()
         self.recipes_window.destroy()
+
 
     def Cam1_Toggle(self):
         self.camera1_window = tk.Toplevel(self)

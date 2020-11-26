@@ -29,7 +29,7 @@ def number2():
 #script   
 while True:
     if S1.is_pressed:
-        sleep(.5)
+        
         #Trigers Motor to alternate pulses
         M1.pulse(n=1)
         sleep(.5)
