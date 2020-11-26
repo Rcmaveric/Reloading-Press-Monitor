@@ -1,44 +1,46 @@
 '''
 Author:     Rcmaveric
 Date:       07 Nov 2020
-Licensing:  Do what you but you can't sell it. It stays open source with source codes available.
-            Due to licensings of packages used.
+Licensing:  This was written with open source packages so their licenses apply. The logo I am currently
+            using belongs to castbullets.gunloads and they own all the rights. A lot of this code was 
+            published else were for different purposes. I just found it and addapted it. 
 IRL Name:   Ryan Conner
-Email:      rcmaveric112@gmail.com
-            I barely know what I am doing and Google and stack exchange will help you more than me. LMAO most of this code
-            is copy pasted and lucky extropilated guesses. 
+Email:      rcmaveric@gmail.com
+            I am learning and starting to get the hang of this. Hopefull I explained enough with comments
+            to prevent. I am not the most knowledgable. Google and stack overflow is how i got this far.
 
 Note:       Reason for all the comments: I am learning and reminders help. Also for others to learn.
-            Most importantly, I use VSC and it allows nesting by comments. I can colapse the lines between
-            comments to make the navigation of code easier. 
+            Most importantly, I use VSC and it allows nesting by indent. Comments hope with control indents
+            and nest level. I can colapse the lines between comments to make the navigation of code easier. 
 
 Contributors: The various awesome post from StackOverflow. I wouldnt have been able to get this far 
-              without them. 
+              without them they dont know they helped. Honorable mentions because I used their code 
+              are Brian Oakley.
 '''
-from gpiozero import Button, PWMOutputDevice, Buzzer
+import gpiozero as gp
 import tkinter as tk
-import sys
+import sys, os, csv, datetime, cv2, platform, subprocess
 from tkinter import ttk, messagebox
 from PIL import Image, ImageTk
 from ttkthemes import ThemedStyle
-import os
-import csv
-import datetime
-import cv2
-import platform
-import subprocess
 from time import sleep
 
-#Hardware Variable names, always match to schematic
-S1 = Button(25)
-S2 = Button(8)
-S3 = Button(7)
-M1 = PWMOutputDevice(16, frequency=400)
-M2 = PWMOutputDevice(13, frequency=400)
-ldr = LightSensor(4)  
+#Hardware Variable names, always match to schematic with numbers. Change your pins if differen.
+S1 = gp.Button(25) #Counter switch
+S2 = gp.Button(8) # Reset Cases
+S3 = gp.Button(7) #Reset Primers
+#S4 = gp.Button(24) #Non-Functional at this time future pause button
+M1 = gp.PWMOutputDevice(16, frequency=400) #Primer vibrator
+M2 = gp.PWMOutputDevice(13, frequency=400) #Powder Vibrator
+#Ldr1 = LightSensor(4) #Low Primer
+#Ldr2 = LightSensor(19) #Bullet Feeder
+#Ldr3 = LightSensor(28) #Case Feeder  
 # For Passive buzzers, little buzzer best at 2500HZ, Larger 3000hz
-#buzzer = PWMOutputDevice(23, frequency=2500)
-#buzzer = PWMOutputDevice(18, frequency=3000)
+#Buzzer = PWMOutputDevice(18, frequency=2500)
+#If you relays operate backwards swap the active_high state (default is True).
+#Setting initial_value to false ensures relays start closed enstead of current state.
+#Relay1 = gp.OutputDevice(6, initial_value=False, active_high=False)
+#Relay2 = gp.OutputDevice(12, initial_value=False, active_high=False)
 
 
 #Note to self: the way this works is the csv is turned into a class. The class name is the list ID which is Recipe[n],
@@ -301,7 +303,6 @@ class MenuBar(tk.Menu):
         helpMenu = tk.Menu(self, tearoff=False)
         self.add_cascade(label="File",underline=0, menu=fileMenu)
         fileMenu.add_command(label="Copy", underline=0, command=clip_board_copy)
-        fileMenu.add_command(label="Save", underline=0, command=None)
         fileMenu.add_command(label="Exit", underline=1, command=self.quit)
         self.add_cascade(label="Loads", underline=0, menu=loadsMenu)
         loadsMenu.add_command(label="Add/Remove", underline=0, command=add_remove)
@@ -309,8 +310,8 @@ class MenuBar(tk.Menu):
         helpMenu.add_command(label="User Manual", underline=0, command = lambda: Open_User_Man())
         helpMenu.add_command(label="About", underline=0, 
                             command= lambda: messagebox.showinfo("Welcome", 
-                            "I am RCMaveric and this is the Ammo Plant Monitor"+'\n'+
-                            "My name is Ryan Conner and this is my attempt at programing"+'\n'+
+                            "I am RCMaveric and this is the Ammo Computer."+'\n'+
+                            "My name is Ryan Conner and this is my adventure."+'\n'+
                             "I saw a need and wanted to atempt to fill it."+'\n'+
                             "Enjoy and I hope you like. Feel free to adjust the code and make it yours."+'\n'+
                             "Email: Rcmaveric@Gmail.com"))
@@ -356,10 +357,8 @@ class FormBox(ttk.LabelFrame):
         COAL_label.grid(column=9, row=0)
         primer_label = ttk.Label(self.formz_frame, text="Primer")
         primer_label.grid(column=10, row=0)
-        
-        
+              
      #Form Input Boxes
-        #Sets default current date
         to_day = datetime.datetime.now() # Retreve current date.
         self.date_box = ttk.Entry(self.formz_frame,width=10)
         self.date_box.grid(column=0, row=1)
@@ -394,6 +393,10 @@ class FormBox(ttk.LabelFrame):
         self.load_select_label = tk.Label(self.combo_frame, text="Pet Loads")
         self.load_select_label.grid(row=0, column=0)
         self.load_select = ttk.Combobox(self.combo_frame, width=25, value = Loads)
+        #Unfortunately the ComboBox turns the Loads dictionary into a string. Thats fine because
+        #calling the self.Combo_Entry coverts the string back into a dictionary to fill the form.
+        #I tried to find a work around but that is not possible but atleast it works this way,
+        #albeit some what complicated. Though functinal.
         self.load_select.bind("<<ComboboxSelected>>", self.Combo_Entry)
         self.load_select.grid(column=1, row=0)
         self.combo_frame.grid(column=2, row=0)
@@ -401,7 +404,8 @@ class FormBox(ttk.LabelFrame):
 
     def Combo_Entry(self, eventObject):
         self.Clear_Load_data()
-        #This Code magically turns our string back into a Dictionary
+        #This Code magically turns our string back into a Dictionary and was copied and pasted from
+        # and tweeked from Stack overflow and Google. 
         raw_string_recipe = self.load_select.get()#get data string
         new_data_string=raw_string_recipe[7:]#removes recipe from string
         #Now we clean the string
@@ -605,7 +609,11 @@ class Alarm (tk.LabelFrame):
         low_bullet_label = tk.Button(low_bullet_warning, text="Alert", background="red", height=2, width=5)
         low_bullet_label.pack(fill = "both")
 
-#Main Aplication Window to call in the classes
+#Main Aplication Window to call in the classes.
+#Note to self: To pass values and functions into a classes. Do that here in the main app class. 
+#Add value place holder in class creaters above. Then reference input value inside class dont
+#forget parenthese on functions. Then when instansizing the class, reference the other values
+#or functions from different instanced into the class calling value holder using the dot method. 
 class App(tk.Tk):
     def __init__(self):
         super().__init__()
@@ -642,7 +650,9 @@ class App(tk.Tk):
         level = Powder(self.middle_frame)
         level.grid(column=3, row=0)  
   #Third Frame
-        self.cammy = Cam_Control(self.middle_frame, cam1=self.Cam1_Toggle, cam2=self.Cam2_Toggle)
+        self.cammy = Cam_Control(self.middle_frame,
+                                 cam1=self.Cam1_Toggle,
+                                 cam2=self.Cam2_Toggle)
         self.cammy.grid(column=0, row=1)  
         self.calls = Alarm(self.middle_frame)
         self.calls.grid(column=1, row=1)  
