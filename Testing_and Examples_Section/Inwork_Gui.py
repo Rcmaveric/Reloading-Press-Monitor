@@ -19,7 +19,7 @@ Contributors: The various awesome post from StackOverflow. I wouldnt have been a
 '''
 import gpiozero as gp
 import tkinter as tk
-import sys, os, csv, datetime, cv2, platform, subprocess
+import sys, os, csv, datetime, cv2, platform, subprocess, time
 from tkinter import ttk, messagebox
 from PIL import Image, ImageTk
 from ttkthemes import ThemedStyle
@@ -586,28 +586,44 @@ class Alarm (tk.LabelFrame):
       #Low Primers
         low_primer_warning = ttk.LabelFrame(self, text="Primers")
         low_primer_warning.pack(side = "left")
-        low_primer_label =  tk.Button(low_primer_warning, text="Alert", background="red", height=2, width=5, command= None)
-        low_primer_label.pack(fill = "both") 
+        low_primer_label =  tk.Button(low_primer_warning, text="Good", background="green", height=2, width=5, command= Low_Primer_Reset)
+        low_primer_label.pack(fill = "both")
+        ldr1.when_dark = Low_Primer_Alert()
       #Binding
         binding_warning = ttk.LabelFrame(self, text="Binding")
         binding_warning.pack(side = "left") 
-        binding_label = tk.Button(binding_warning, text="Alert", background="red", height=2, width=5)
+        binding_label = tk.Button(binding_warning, text="Good", background="green", height=2, width=5)
         binding_label.pack(fill = "both")
       #Low Powder
         low_powder_warning = ttk.LabelFrame(self, text="Powder")
         low_powder_warning.pack(side = "left")
-        low_powder_label = tk.Button(low_powder_warning, text="Alert", background="red", height=2, width=5)
+        low_powder_label = tk.Button(low_powder_warning, text="Good", background="green", height=2, width=5)
         low_powder_label.pack(fill = "both")
       #Low Cases
         low_case_warning = ttk.LabelFrame(self, text="Case")
         low_case_warning.pack(side = "left")
-        low_case_label = tk.Button(low_case_warning, text="Alert", background="red", height=2, width=5)
+        low_case_label = tk.Button(low_case_warning, text="Good", background="green", height=2, width=5)
         low_case_label.pack(fill = "both")
       #Low Bullets
         low_bullet_warning = ttk.LabelFrame(self,text="Bullets")
         low_bullet_warning.pack(side = "left")
-        low_bullet_label = tk.Button(low_bullet_warning, text="Alert", background="red", height=2, width=5)
+        low_bullet_label = tk.Button(low_bullet_warning, text="Good", background="green", height=2, width=5)
         low_bullet_label.pack(fill = "both")
+        
+
+    def Low_Primer_Alert():
+        startTime = time.time()
+        if ldr1.value > .8:
+            endTime = time.time()            
+            if (endTime - startTime > 3):
+                sleep(.1)        
+                low_primer_label.config(background="red", text="Alert", weight=bold)
+                buzzer.pulse()
+                print("Low Primers")
+                        
+    def Low_Primer_Reset():
+        low_primer_label.config(background="green", text="Good", weight=normal)
+        buzzer.pulse(off)
 
 #Main Aplication Window to call in the classes.
 #Note to self: To pass values and functions into a classes. Do that here in the main app class. 
