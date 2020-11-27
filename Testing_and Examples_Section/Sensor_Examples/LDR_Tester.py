@@ -5,7 +5,7 @@ import time
 
 # alter if using a different pin
 ldr1 = LightSensor(4)
-#ldr2 = LightSensor(19)  
+#ldr2 = LightSensor(19)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
 #ldr3 = LightSensor(26) 
 
 while True:

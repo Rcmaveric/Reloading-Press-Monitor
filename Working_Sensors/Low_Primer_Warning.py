@@ -7,7 +7,7 @@ import time
 ldr = LightSensor(4)  
 # For Passive buzzers, little buzzer best at 2500HZ, Larger 3000hz
 #buzzer = PWMOutputDevice(23, frequency=2500)
-buzzer = PWMOutputDevice(18, frequency=3000)
+buzzer = PWMOutputDevice(18, frequency=2000, active_high=True)
 #led2 = LED(24)
 
 startTime = time.time()

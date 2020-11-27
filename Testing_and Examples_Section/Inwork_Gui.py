@@ -32,11 +32,11 @@ S3 = gp.Button(7) #Reset Primers
 #S4 = gp.Button(24) #Non-Functional at this time future pause button
 M1 = gp.PWMOutputDevice(16, frequency=400) #Primer vibrator
 M2 = gp.PWMOutputDevice(13, frequency=400) #Powder Vibrator
-Ldr1 = gp.LightSensor(4, threshold = .7, charge_time_limit=.02) #Low Primer
+Ldr1 = gp.LightSensor(4) #Low Primer
 #Ldr2 = LightSensor(19) #Bullet Feeder
 #Ldr3 = LightSensor(28) #Case Feeder  
 # For Passive buzzers, little buzzer best at 2500HZ, Larger 3000hz
-Buzzer = gp.PWMOutputDevice(18, frequency=3000)
+Buzzer = gp.PWMOutputDevice(18, frequency=2000)
 #If you relays operate backwards swap the active_high state (default is True).
 #Setting initial_value to false ensures relays start closed enstead of current state.
 #Relay1 = gp.OutputDevice(6, initial_value=False, active_high=False)
@@ -611,19 +611,15 @@ class Alarm (tk.LabelFrame):
         low_bullet_warning.pack(side = "left")
         low_bullet_label = tk.Button(low_bullet_warning, text="Good", background="green", height=2, width=5)
         low_bullet_label.pack(fill = "both")
-        
 
     def Low_Primer_Reset(self):
         self.low_primer_label.configure(bg="green", text = "Good")
         Buzzer.off()
 
- 
     def Low_Primer_Alert(self):
         self.low_primer_label.configure(bg="red", text = "Alert")
         print("Low Primers")
         Buzzer.pulse()
-                        
-    
 
 #Main Aplication Window to call in the classes.
 #Note to self: To pass values and functions into a classes. Do that here in the main app class. 
