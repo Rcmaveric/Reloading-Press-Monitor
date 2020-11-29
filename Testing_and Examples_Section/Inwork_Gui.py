@@ -589,6 +589,7 @@ class Alarm (tk.LabelFrame):
         self.low_primer_label =  tk.Button(low_primer_warning, text="Good", background="green", height=2, 
                                             width=5, command= self.Low_Primer_Reset)
         self.low_primer_label.pack(fill = "both")
+        self.startTime = time.time()
         Ldr1.when_light= self.Low_Primer_Alert
         
       #Binding
@@ -617,9 +618,11 @@ class Alarm (tk.LabelFrame):
         Buzzer.off()
 
     def Low_Primer_Alert(self):
-        self.low_primer_label.configure(bg="red", text = "Alert")
-        print("Low Primers")
-        Buzzer.pulse()
+        endTime = time.time()
+        if (endTime - self.startTime > 3):
+            Buzzer.pulse()
+            self.low_primer_label.configure(bg="red", text = "Alert")
+            print("Low Primers")
 
 #Main Aplication Window to call in the classes.
 #Note to self: To pass values and functions into a classes. Do that here in the main app class. 

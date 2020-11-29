@@ -19,7 +19,7 @@ Contributors: The various awesome post from StackOverflow. I wouldnt have been a
 '''
 import gpiozero as gp
 import tkinter as tk
-import sys, os, csv, datetime, cv2, platform, subprocess
+import sys, os, csv, datetime, cv2, platform, subprocess, time
 from tkinter import ttk, messagebox
 from PIL import Image, ImageTk
 from ttkthemes import ThemedStyle
@@ -32,11 +32,11 @@ S3 = gp.Button(7) #Reset Primers
 #S4 = gp.Button(24) #Non-Functional at this time future pause button
 M1 = gp.PWMOutputDevice(16, frequency=400) #Primer vibrator
 M2 = gp.PWMOutputDevice(13, frequency=400) #Powder Vibrator
-#Ldr1 = LightSensor(4) #Low Primer
+Ldr1 = gp.LightSensor(4) #Low Primer
 #Ldr2 = LightSensor(19) #Bullet Feeder
 #Ldr3 = LightSensor(28) #Case Feeder  
 # For Passive buzzers, little buzzer best at 2500HZ, Larger 3000hz
-#Buzzer = PWMOutputDevice(18, frequency=2500)
+Buzzer = gp.PWMOutputDevice(18, frequency=2000)
 #If you relays operate backwards swap the active_high state (default is True).
 #Setting initial_value to false ensures relays start closed enstead of current state.
 #Relay1 = gp.OutputDevice(6, initial_value=False, active_high=False)
@@ -586,28 +586,43 @@ class Alarm (tk.LabelFrame):
       #Low Primers
         low_primer_warning = ttk.LabelFrame(self, text="Primers")
         low_primer_warning.pack(side = "left")
-        low_primer_label =  tk.Button(low_primer_warning, text="Alert", background="red", height=2, width=5, command= None)
-        low_primer_label.pack(fill = "both") 
+        self.low_primer_label =  tk.Button(low_primer_warning, text="Good", background="green", height=2, 
+                                            width=5, command= self.Low_Primer_Reset)
+        self.low_primer_label.pack(fill = "both")
+        self.startTime = time.time()
+        Ldr1.when_light= self.Low_Primer_Alert
+        
       #Binding
         binding_warning = ttk.LabelFrame(self, text="Binding")
         binding_warning.pack(side = "left") 
-        binding_label = tk.Button(binding_warning, text="Alert", background="red", height=2, width=5)
+        binding_label = tk.Button(binding_warning, text="Good", background="green", height=2, width=5)
         binding_label.pack(fill = "both")
       #Low Powder
         low_powder_warning = ttk.LabelFrame(self, text="Powder")
         low_powder_warning.pack(side = "left")
-        low_powder_label = tk.Button(low_powder_warning, text="Alert", background="red", height=2, width=5)
+        low_powder_label = tk.Button(low_powder_warning, text="Good", background="green", height=2, width=5)
         low_powder_label.pack(fill = "both")
       #Low Cases
         low_case_warning = ttk.LabelFrame(self, text="Case")
         low_case_warning.pack(side = "left")
-        low_case_label = tk.Button(low_case_warning, text="Alert", background="red", height=2, width=5)
+        low_case_label = tk.Button(low_case_warning, text="Good", background="green", height=2, width=5)
         low_case_label.pack(fill = "both")
       #Low Bullets
         low_bullet_warning = ttk.LabelFrame(self,text="Bullets")
         low_bullet_warning.pack(side = "left")
-        low_bullet_label = tk.Button(low_bullet_warning, text="Alert", background="red", height=2, width=5)
+        low_bullet_label = tk.Button(low_bullet_warning, text="Good", background="green", height=2, width=5)
         low_bullet_label.pack(fill = "both")
+
+    def Low_Primer_Reset(self):
+        self.low_primer_label.configure(bg="green", text = "Good")
+        Buzzer.off()
+
+    def Low_Primer_Alert(self):
+        endTime = time.time()
+        if (endTime - self.startTime > 3):
+            Buzzer.pulse()
+            self.low_primer_label.configure(bg="red", text = "Alert")
+            print("Low Primers")
 
 #Main Aplication Window to call in the classes.
 #Note to self: To pass values and functions into a classes. Do that here in the main app class. 
