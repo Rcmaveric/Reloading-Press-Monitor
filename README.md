@@ -1,10 +1,10 @@
 # Reloading-Press-Monitor
 
-A disclaimer: Most of the code is found on the internet. I just copy and pasted and messed with it till it worked. Half the time I barely know what I am doing. Most of my electronics experience is analog systems. Those are easy atleast for me. Most of the code in my examples comes from stack exchange. I personally feel bad for not citing the actually owners of the code. The logo I am currently using is to one of my favorite websites. They own it and I found it on Google images. You can change it to what ever you like or a family crest or any other personal logo. The code will automatically resize it.
+A disclaimer:  The logo I am currently using is to one of my favorite websites. They own it and I found it on Google images. You can change it to what ever you like or a family crest or any other personal logo. The code will automatically resize it.
 
-This is a great under taking taken by a Newb with zero experince. Press monitoring computers have been around for a while now, but are expensive in the 500 to 2k dollar range. Why not make a customisable one for less than 200 bucks.
+This has been a fun adventure and I feel I graduated from Newb to Novice working on this. Press monitoring computers have been around for a while now, but are expensive in the 500 to 2k dollar range. Why not make a customisable one for less than 200 bucks?
 
-This is a work in progress and I am inexperienced with github and python so bare with me as I learn. Critiques, ideas, and pointers are welcome. I wanted something so I am making it and shareing. Plus the fun of creating something. The end goal is to have something modular and easy to understand that anyone with any level of experience can pick up and enter some user defined inputs and have press monitor to suit their needs for any style press.
+This is a work in progress I gain experience in github and python, so bare with me as I learn. Critiques, ideas, and pointers are welcome. I wanted something so I am making it and shareing. Plus the fun of creating something. The end goal is to have something modular and easy to understand that anyone with any level of experience can pick up and enter some user defined inputs and have press monitor to suit their needs for any style press.
 
 GUI_Working: As of right now the functionality is as follows:
     -1_Old_Guizero: These were made with guizero. They have no functionality. I couldnt figure out how to incorporate OPencv. So left this as reference and to show learning progression.
@@ -12,19 +12,21 @@ GUI_Working: As of right now the functionality is as follows:
     -3_1_Class_TK_Gui: I converted the old tkinter into a class basesd writing style. I was hoping to add better readability. Adding funtionality its proving to be hard. 
         Functionality is as follows:
             The forms works. You can clear and save reloading log into csv. App has its own log which you can copy and paste out of. 
-            You may also use the file, copy selection to copy your data to clip boards and the simply paste int your own excel or open office
+            You may also use the file, copy selection to copy your data to clip board and the simply paste into your own excel or open office
             file.
-            - The recipe editor works and updates the pet loads drop down. You can edit your pet loads file your self with your favorite excel
+            - The recipe editor works and updates the pet loads combo box. You can edit your pet loads file your self with your favorite excel
             eqavalent program. You must save as CSV file format though. Onboard editor works 4.0 though.
             - Both camera buttons work. You must verify your cam buttons device numbers. Plug two usb cams in and see what they are. Then 
             manually input those numbers. Current defaults are 0 and 1. Thats what mine are. 
             -I have not written user manual yet. The file and functionality is there for when I get everything done. This will be the last 
             thing I do.
             -Current GPIO functionality: Counters work and export correctly. Motors vibrate correctly. Low primer warning works now with timing
-            function. So warning gets set if no primers seen for .3 seconds. Clicking the Low Primer alert silences alarm and removes red alert.
-            -Inwork Functionality: Case Feeder, Bullet Feeder, Jam and bullet present alerts and afunctionality.
+            function, so warning gets set if no primers seen for .3 seconds. Clicking the Low Primer alert silences alarm and removes red alert 
+            chicklit.
+            -Inwork Functionality: Case Feeder, Bullet Feeder, Jam and bullet present alerts and functionality.
     -3_2_Relaoding_Log: This is where the form is logged. Removed count entry and count is now pulled from the count box.
     -3_3_Cartridge_Recipe: This is just an example I created of the recipe data base the user can define and call in to prefill entry widgets.
+    This is the file that gets edited when you remove and add pet loads. Also the file you can manually edit if you so choose.
     -TK_Cam.py: An example to use for later so i can create tkinter cam frames. Lets you veiw one webcam currently.
     -View_2.py: Lets you view two webcams at once via OpenCV. You may need to check the labeling of your capture device. I use VLC to see which capture device is which. This is if you just want to see two webcams at once. Requires OpenCV to be installed.
 
