@@ -33,14 +33,14 @@ S3 = gp.Button(7) #Reset Primers
 M1 = gp.PWMOutputDevice(16, frequency=400) #Primer vibrator
 M2 = gp.PWMOutputDevice(13, frequency=400) #Powder Vibrator
 Ldr1 = gp.LightSensor(4) #Low Primer
-#Ldr2 = LightSensor(19) #Bullet Feeder
-#Ldr3 = LightSensor(28) #Case Feeder  
+Ldr2 = gp.LightSensor(19) #Bullet Feeder
+Ldr3 = gp.LightSensor(26) #Case Feeder  
 # For Passive buzzers, little buzzer best at 2500HZ, Larger 3000hz
 Buzzer = gp.PWMOutputDevice(18, frequency=2000)
 #If you relays operate backwards swap the active_high state (default is True).
 #Setting initial_value to false ensures relays start closed enstead of current state.
-#Relay1 = gp.OutputDevice(6, initial_value=False, active_high=False)
-#Relay2 = gp.OutputDevice(12, initial_value=False, active_high=False)
+Relay1 = gp.OutputDevice(6, initial_value=False, active_high=True)
+Relay2 = gp.OutputDevice(12, initial_value=False, active_high=True)
 
 
 #Note to self: the way this works is the csv is turned into a class. The class name is the list ID which is Recipe[n],
@@ -605,24 +605,46 @@ class Alarm (tk.LabelFrame):
       #Low Cases
         low_case_warning = ttk.LabelFrame(self, text="Case")
         low_case_warning.pack(side = "left")
-        low_case_label = tk.Button(low_case_warning, text="Good", background="green", height=2, width=5)
-        low_case_label.pack(fill = "both")
+        self.low_case_label = tk.Button(low_case_warning, command = self.Low_Cases_Reset,
+                                        text="Good", background="green", 
+                                        height=2, width=5)
+        self.low_case_label.pack(fill = "both")
+        Ldr2.when_dark = Relay1.off
+        Ldr2.when_light = Relay1.on
+        
       #Low Bullets
         low_bullet_warning = ttk.LabelFrame(self,text="Bullets")
         low_bullet_warning.pack(side = "left")
         low_bullet_label = tk.Button(low_bullet_warning, text="Good", background="green", height=2, width=5)
         low_bullet_label.pack(fill = "both")
+        Ldr3.when_dark = Relay2.off
+        Ldr3.when_light = Relay2.on
+        
+
 
     def Low_Primer_Reset(self):
         self.low_primer_label.configure(bg="green", text = "Good")
         Buzzer.off()
 
     def Low_Primer_Alert(self):
-        endTime = time.time()
-        if (endTime - self.startTime > 3):
+        self.endTime = time.time()
+        if (self.endTime - self.startTime > 3):
             Buzzer.pulse()
             self.low_primer_label.configure(bg="red", text = "Alert")
             print("Low Primers")
+
+    def Low_Cases(self):
+        self.endTime = time.time()
+        Relay1.on
+        if (self.endTime - self.startTime > 25):
+            Buzzer.pulse()
+            self.low_case_label.configure(bg="red", text = "Alert")
+            print("Low Cases")
+
+    def Low_Cases_Reset(self):
+        Buzzer.off()
+        self.low_case_label.configure(bg="green", text = "Good")
+
 
 #Main Aplication Window to call in the classes.
 #Note to self: To pass values and functions into a classes. Do that here in the main app class. 

@@ -8,7 +8,7 @@ ldr1 = LightSensor(4)
 #ldr2 = LightSensor(19)
 
 #If you relays operate backwards swap the active_high state (default is True).
-relay1 = OutputDevice(6, initial_value=False, active_high=False)
+relay1 = OutputDevice(6, initial_value=False, active_high=True)
 #relay2 = OutputDevice(12, initial_value=False, active_high=False)
 
 while True:
