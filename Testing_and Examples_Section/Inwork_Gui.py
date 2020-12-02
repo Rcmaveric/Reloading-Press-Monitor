@@ -35,8 +35,8 @@ M2 = gp.PWMOutputDevice(13, frequency=400) #Powder Vibrator
 Ldr1 = gp.LightSensor(4) #Low Primer
 Ldr2 = gp.LightSensor(19) #Bullet Feeder
 Ldr3 = gp.LightSensor(26) #Case Feeder  
-# For Passive buzzers, little buzzer best at 2500HZ, Larger 3000hz
-Buzzer = gp.PWMOutputDevice(18, frequency=2000)
+# For Passive buzzers use PWM. Active buzzers us Buzzer.
+Buzzer = gp.PWMOutputDevice(18, frequency=6000)
 #If you relays operate backwards swap the active_high state (default is True).
 #Setting initial_value to false ensures relays start closed enstead of current state.
 Relay1 = gp.OutputDevice(6, initial_value=False, active_high=True)
@@ -581,6 +581,7 @@ class Alarm (tk.LabelFrame):
     def __init__(self, master):
         tk.LabelFrame.__init__(self, master, text="Cautions")
         self.master = master
+        self.startTime = time.time()
         #These will display in the order written and aligned to the left.
     #Alerts
       #Low Primers
@@ -589,7 +590,6 @@ class Alarm (tk.LabelFrame):
         self.low_primer_label =  tk.Button(low_primer_warning, text="Good", background="green", height=2, 
                                             width=5, command= self.Low_Primer_Reset)
         self.low_primer_label.pack(fill = "both")
-        self.startTime = time.time()
         Ldr1.when_light= self.Low_Primer_Alert
         
       #Binding
@@ -620,8 +620,6 @@ class Alarm (tk.LabelFrame):
         Ldr3.when_dark = Relay2.off
         Ldr3.when_light = Relay2.on
         
-
-
     def Low_Primer_Reset(self):
         self.low_primer_label.configure(bg="green", text = "Good")
         Buzzer.off()
@@ -633,18 +631,20 @@ class Alarm (tk.LabelFrame):
             self.low_primer_label.configure(bg="red", text = "Alert")
             print("Low Primers")
 
-    def Low_Cases(self):
-        self.endTime = time.time()
-        Relay1.on
-        if (self.endTime - self.startTime > 25):
-            Buzzer.pulse()
+    def Low_Cases(self): #this doesnt work
+        self.endTime = time.time
+        if (self.endTime - self.startTime > 3):
             self.low_case_label.configure(bg="red", text = "Alert")
+            Buzzer.pulse()
             print("Low Cases")
+
+    def Feed_Cases (self):
+        Relay1.on
+        self.Low_Cases
 
     def Low_Cases_Reset(self):
         Buzzer.off()
         self.low_case_label.configure(bg="green", text = "Good")
-
 
 #Main Aplication Window to call in the classes.
 #Note to self: To pass values and functions into a classes. Do that here in the main app class. 
