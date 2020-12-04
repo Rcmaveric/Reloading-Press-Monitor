@@ -609,16 +609,14 @@ class Alarm (tk.LabelFrame):
                                         text="Good", background="green", 
                                         height=2, width=5)
         self.low_case_label.pack(fill = "both")
-        Ldr2.when_dark = Relay1.off
-        Ldr2.when_light = Relay1.on
+        Relay1.source = Ldr2
         
       #Low Bullets
         low_bullet_warning = ttk.LabelFrame(self,text="Bullets")
         low_bullet_warning.pack(side = "left")
         low_bullet_label = tk.Button(low_bullet_warning, text="Good", background="green", height=2, width=5)
         low_bullet_label.pack(fill = "both")
-        Ldr3.when_dark = Relay2.off
-        Ldr3.when_light = Relay2.on
+        Relay2.source = Ldr3
         
     def Low_Primer_Reset(self):
         self.low_primer_label.configure(bg="green", text = "Good")

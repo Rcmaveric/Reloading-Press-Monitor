@@ -15,7 +15,7 @@ while True:
     if ldr.value > .8:
         endTime = time.time()
         #LDR.value has to be above .8 for 3 seconds to sound alarm. This prevents false alarms during primer feading.
-        if (endTime - startTime > 3):
+        if (endTime - startTime > 1):
             sleep(.2)
             buzzer.pulse(n=1)
             print("Low Cases")
@@ -24,3 +24,4 @@ while True:
         sleep(.2)
         #led2.off()
         buzzer.off()
+        startTime = time.time()

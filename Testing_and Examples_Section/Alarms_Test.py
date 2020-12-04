@@ -28,16 +28,21 @@ class Alarm (tk.LabelFrame):
                                         text="Good", background="green", 
                                         height=2, width=5)
         self.low_case_label.pack(fill = "both")
-        Ldr3.when_dark = Relay2.off
-        Ldr3.when_light = self.Low_Cases
+        Relay2.source = Ldr3
+        
 
     def Low_Cases(self): #Doesnt work.
-        Relay2.on
-        if (Relay2.value == 1):
-            time.sleep(1)
-            Buzzer.pulse()
-            self.low_case_label.configure(bg="red", text = "Alert")
-            print("Low Cases")
+        while True:
+            pulsetime = 0
+            Ldr3.wait_for_light()
+            time.sleep(0.1)
+            while Ldr3.light_detected == True:
+                time.sleep(0.2)
+                pulsetime += 1
+                print (pulsetime)
+                if pulsetime >= 15:
+                    Buzzer.pulse()
+                    self.low_case_label.configure(bg="red", text = "Alert")
         
     def Low_Cases_Reset(self):
         Buzzer.off()
@@ -55,3 +60,4 @@ class App(tk.Tk):
 if __name__ == "__main__":
     app=App()
     app.mainloop()
+    
