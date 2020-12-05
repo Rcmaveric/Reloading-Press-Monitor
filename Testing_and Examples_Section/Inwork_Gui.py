@@ -14,12 +14,12 @@ Note:       Reason for all the comments: I am learning and reminders help. Also 
             and nest level. I can colapse the lines between comments to make the navigation of code easier. 
 
 Contributors: The various awesome post from StackOverflow. I wouldnt have been able to get this far 
-              without them they dont know they helped. Honorable mentions because I used their code 
-              are Brian Oakley.
+              without them they dont know they helped. Honorable mentions are: Brian Oakley from Stack Over Flow (I found alot of his examples with Google)
+              and DarkElfinAngel from Raspberrypi.org forum for the timer.  
 '''
 import gpiozero as gp
 import tkinter as tk
-import sys, os, csv, datetime, cv2, platform, subprocess, time
+import sys, os, csv, datetime, cv2, platform, subprocess, time, threading
 from tkinter import ttk, messagebox
 from PIL import Image, ImageTk
 from ttkthemes import ThemedStyle
@@ -29,7 +29,7 @@ from time import sleep
 S1 = gp.Button(25) #Counter switch
 S2 = gp.Button(8) # Reset Cases
 S3 = gp.Button(7) #Reset Primers
-#S4 = gp.Button(24) #Non-Functional at this time future pause button
+S4 = gp.Button(24) #Binding prox switches
 M1 = gp.PWMOutputDevice(16, frequency=400) #Primer vibrator
 M2 = gp.PWMOutputDevice(13, frequency=400) #Powder Vibrator
 Ldr1 = gp.LightSensor(4) #Low Primer
@@ -590,18 +590,18 @@ class Alarm (tk.LabelFrame):
         self.low_primer_label =  tk.Button(low_primer_warning, text="Good", background="green", height=2, 
                                             width=5, command= self.Low_Primer_Reset)
         self.low_primer_label.pack(fill = "both")
-        Ldr1.when_light= self.Low_Primer_Alert
-        
       #Binding
         binding_warning = ttk.LabelFrame(self, text="Binding")
         binding_warning.pack(side = "left") 
-        binding_label = tk.Button(binding_warning, text="Good", background="green", height=2, width=5)
-        binding_label.pack(fill = "both")
+        self.binding_label = tk.Button(binding_warning, text="Good", background="green",
+                                       height=2, width=5, command=self.Is_Bound_Reset)
+        self.binding_label.pack(fill = "both")
       #Low Powder
         low_powder_warning = ttk.LabelFrame(self, text="Powder")
         low_powder_warning.pack(side = "left")
-        low_powder_label = tk.Button(low_powder_warning, text="Good", background="green", height=2, width=5)
-        low_powder_label.pack(fill = "both")
+        self.low_powder_label = tk.Button(low_powder_warning, text="Good", background="green",
+                                     height=2, width=5, command=None)
+        self.low_powder_label.pack(fill = "both")
       #Low Cases
         low_case_warning = ttk.LabelFrame(self, text="Case")
         low_case_warning.pack(side = "left")
@@ -614,35 +614,101 @@ class Alarm (tk.LabelFrame):
       #Low Bullets
         low_bullet_warning = ttk.LabelFrame(self,text="Bullets")
         low_bullet_warning.pack(side = "left")
-        low_bullet_label = tk.Button(low_bullet_warning, text="Good", background="green", height=2, width=5)
-        low_bullet_label.pack(fill = "both")
+        self.low_bullet_label = tk.Button(low_bullet_warning, text="Good",
+                                     background="green", height=2, width=5,
+                                     command= self.Low_Bullet_Reset)
+        self.low_bullet_label.pack(fill = "both")
         Relay2.source = Ldr3
         
-    def Low_Primer_Reset(self):
-        self.low_primer_label.configure(bg="green", text = "Good")
-        Buzzer.off()
+     #Threads
+        self.T1 = threading.Thread(target=self.Low_Cases, daemon=True)
+        self.T1.start()
+        self.T2 = threading.Thread(target=self.Low_Primers, daemon=True)
+        self.T2.start()
+        self.T3 = threading.Thread(target=self.Low_Bullets, daemon=True)
+        self.T3.start()
+        self.T4 = threading.Thread(target=self.Is_Bound, daemon=True)
+        self.T4.start()
 
-    def Low_Primer_Alert(self):
-        self.endTime = time.time()
-        if (self.endTime - self.startTime > 3):
-            Buzzer.pulse()
-            self.low_primer_label.configure(bg="red", text = "Alert")
-            print("Low Primers")
+    def Low_Cases(self): #Currently Works if thread is a daemon.
+        while True:
+            pulsetime = 0
+            Ldr3.wait_for_light()
+            time.sleep(0.2)
+            while Ldr3.light_detected == True:
+                time.sleep(0.2)
+                pulsetime += 1
+                print ("Case Timer = " + str(pulsetime))
+                if pulsetime >= 15:
+                    self.low_case_label.configure(bg="red", text = "Alert")
+                    Buzzer.pulse(n=1)
+                if Ldr3.light_detected == False: 
+                    pass
+    
+    def Low_Bullets(self): #Currently Works if thread is a daemon.
+        while True:
+            pulsetime = 0
+            Ldr2.wait_for_light()
+            time.sleep(0.2)
+            while Ldr2.light_detected == True:
+                time.sleep(0.2)
+                pulsetime += 1
+                print ("Bullets Timer = " + str(pulsetime))
+                if pulsetime >= 15:
+                    self.low_bullet_label.configure(bg="red", text = "Alert")
+                    Buzzer.pulse(n=1)
+                if Ldr3.light_detected == False: 
+                    pass
 
-    def Low_Cases(self): #this doesnt work
-        self.endTime = time.time
-        if (self.endTime - self.startTime > 3):
-            self.low_case_label.configure(bg="red", text = "Alert")
-            Buzzer.pulse()
-            print("Low Cases")
-
-    def Feed_Cases (self):
-        Relay1.on
-        self.Low_Cases
-
+    def Low_Primers(self): #Currently Works if thread is a daemon.
+        while True:
+            pulsetime = 0
+            Ldr1.wait_for_light()
+            time.sleep(0.2)
+            while Ldr1.light_detected == True:
+                time.sleep(0.2)
+                pulsetime += 1
+                print ("Primers Timer = " + str(pulsetime))
+                if pulsetime >= 3:
+                    self.low_primer_label.configure(bg="red", text = "Alert")
+                    Buzzer.pulse(n=1)
+                if Ldr3.light_detected == False: 
+                    pass            
+    
+    def Is_Bound(self): #Currently Works if thread is a daemon.
+        while True:
+            pulsetime = 0
+            S4.wait_for_press() #Written backwards for testing
+            time.sleep(0.2)
+            while S4.is_pressed == True: #Written backwards for testing
+                time.sleep(0.2)
+                pulsetime += 1
+                print ("Bind Timer = " + str(pulsetime))
+                if pulsetime >= 15:
+                    self.binding_label.configure(bg="red", text = "Alert")
+                    Buzzer.pulse(n=1)
+                if S4.is_pressed == False: #Written backwards for testing
+                    pass          
+    
+    def Low_Powder(self): #No Distance sensor at the moment
+       pass        
+        
     def Low_Cases_Reset(self):
         Buzzer.off()
         self.low_case_label.configure(bg="green", text = "Good")
+    
+    def Low_Primer_Reset(self):
+        self.low_primer_label.configure(bg="green", text = "Good")
+        Buzzer.off()
+        
+    def Low_Bullet_Reset(self):
+        self.low_bullet_label.configure(bg="green", text = "Good")
+        Buzzer.off()
+
+    def Is_Bound_Reset(self):
+        self.binding_label.configure(bg="green", text = "Good")
+        Buzzer.off()
+
 
 #Main Aplication Window to call in the classes.
 #Note to self: To pass values and functions into a classes. Do that here in the main app class. 
