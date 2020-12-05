@@ -632,63 +632,76 @@ class Alarm (tk.LabelFrame):
 
     def Low_Cases(self): #Currently Works if thread is a daemon.
         while True:
-            pulsetime = 0
+            pulsetime = 15
             Ldr3.wait_for_light()
             time.sleep(0.2)
             while Ldr3.light_detected == True:
-                time.sleep(0.2)
-                pulsetime += 1
-                print ("Case Timer = " + str(pulsetime))
-                if pulsetime >= 15:
-                    self.low_case_label.configure(bg="red", text = "Alert")
-                    Buzzer.pulse(n=1)
-                if Ldr3.light_detected == False: 
+                if pulsetime <= -1: #Without this the threads wouldn't idle and release lock
                     pass
+                if pulsetime >= 0:
+                    time.sleep(0.2)
+                    pulsetime -= 1
+                    print ("Case Timer = " + str(pulsetime))
+                    if pulsetime <= 0:
+                        self.low_case_label.configure(bg="red", text = "Alert")
+                        Buzzer.pulse()
+                    if Ldr3.light_detected == False: 
+                        pass
     
     def Low_Bullets(self): #Currently Works if thread is a daemon.
         while True:
-            pulsetime = 0
+            pulsetime = 15
             Ldr2.wait_for_light()
             time.sleep(0.2)
             while Ldr2.light_detected == True:
-                time.sleep(0.2)
-                pulsetime += 1
-                print ("Bullets Timer = " + str(pulsetime))
-                if pulsetime >= 15:
-                    self.low_bullet_label.configure(bg="red", text = "Alert")
-                    Buzzer.pulse(n=1)
-                if Ldr3.light_detected == False: 
+                if pulsetime <= -1: #Without this the threads wouldn't idle and release lock
                     pass
+                if pulsetime >= 0:
+                    time.sleep(0.2)
+                    pulsetime -= 1
+                    print ("Bullets Timer = " + str(pulsetime))
+                    if pulsetime <= 0:
+                        self.low_bullet_label.configure(bg="red", text = "Alert")
+                        Buzzer.pulse()
+                    if Ldr2.light_detected == False: 
+                        pass
 
     def Low_Primers(self): #Currently Works if thread is a daemon.
         while True:
-            pulsetime = 0
+            pulsetime = 3
             Ldr1.wait_for_light()
             time.sleep(0.2)
+            
             while Ldr1.light_detected == True:
-                time.sleep(0.2)
-                pulsetime += 1
-                print ("Primers Timer = " + str(pulsetime))
-                if pulsetime >= 3:
-                    self.low_primer_label.configure(bg="red", text = "Alert")
-                    Buzzer.pulse(n=1)
-                if Ldr3.light_detected == False: 
-                    pass            
+                if pulsetime <= -1: #Without this the threads wouldn't idle and release lock
+                    pass
+                if pulsetime >= 0:
+                    time.sleep(0.2)
+                    pulsetime -= 1
+                    print ("Primers Timer = " + str(pulsetime))
+                    if pulsetime <= 0:
+                        self.low_primer_label.configure(bg="red", text = "Alert")
+                        Buzzer.pulse()
+                    if Ldr1.light_detected == False: 
+                        pass            
     
     def Is_Bound(self): #Currently Works if thread is a daemon.
         while True:
-            pulsetime = 0
+            pulsetime = 16
             S4.wait_for_press() #Written backwards for testing
             time.sleep(0.2)
             while S4.is_pressed == True: #Written backwards for testing
-                time.sleep(0.2)
-                pulsetime += 1
-                print ("Bind Timer = " + str(pulsetime))
-                if pulsetime >= 15:
-                    self.binding_label.configure(bg="red", text = "Alert")
-                    Buzzer.pulse(n=1)
-                if S4.is_pressed == False: #Written backwards for testing
-                    pass          
+                if pulsetime <= -1: #Without this the threads wouldn't idle and release lock
+                    pass
+                if pulsetime >= 0:
+                    time.sleep(0.2)
+                    pulsetime -= 1
+                    print ("Bind Timer = " + str(pulsetime))
+                    if pulsetime <= 0:
+                        self.binding_label.configure(bg="red", text = "Alert")
+                        Buzzer.pulse()
+                    if S4.is_pressed == False: #Written backwards for testing
+                        pass          
     
     def Low_Powder(self): #No Distance sensor at the moment
        pass        
