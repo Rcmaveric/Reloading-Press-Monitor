@@ -30,13 +30,13 @@ S1 = gp.Button(25) #Counter switch
 S2 = gp.Button(8) # Reset Cases
 S3 = gp.Button(7) #Reset Primers
 S4 = gp.Button(24) #Binding prox switches
-M1 = gp.PWMOutputDevice(16, frequency=400) #Primer vibrator
-M2 = gp.PWMOutputDevice(13, frequency=400) #Powder Vibrator
+M1 = gp.PWMOutputDevice(16, frequency=1) #Primer vibrator
+M2 = gp.PWMOutputDevice(13, frequency=1) #Powder Vibrator
 Ldr1 = gp.LightSensor(4) #Low Primer
 Ldr2 = gp.LightSensor(19) #Bullet Feeder
 Ldr3 = gp.LightSensor(26) #Case Feeder  
-# For Passive buzzers use PWM. Active buzzers us Buzzer.
-Buzzer = gp.PWMOutputDevice(18, frequency=6000)
+# For Passive buzzers use PWM. Active buzzers us Buzzer. Be wise that too high a frequecy will peg out CPU
+Buzzer = gp.PWMOutputDevice(18, frequency=1500) 
 #If you relays operate backwards swap the active_high state (default is True).
 #Setting initial_value to false ensures relays start closed enstead of current state.
 Relay1 = gp.OutputDevice(6, initial_value=False, active_high=True)
@@ -50,7 +50,7 @@ with open('3_3_Cartridge_Recipe.csv', 'r', newline='') as f:
     reader = csv.DictReader(f)
     fieldnames = reader.fieldnames
 
-    class Recipe:
+    class Recipe: #Reads the load data CSV file and saves them in a callable class
         def __init__(self, **fields):
             self.__dict__.update(**fields)
 
@@ -61,8 +61,9 @@ with open('3_3_Cartridge_Recipe.csv', 'r', newline='') as f:
 
     Loads = [Recipe(**row) for row in reader]
     
+    #Creates a way to clear the Load data and update it when the the CSV is changed in app.
     def Recipe_Update():
-        Loads.clear()
+        Loads.clear() #This is what clears the list.
         with open('3_3_Cartridge_Recipe.csv', 'r', newline='') as f:
             reader = csv.DictReader(f)
             fieldnames = reader.fieldnames
@@ -77,9 +78,11 @@ with open('3_3_Cartridge_Recipe.csv', 'r', newline='') as f:
                     return('{}({})'.format(self.__class__.__name__, fields))
 
             new = ([Recipe(**row) for row in reader])
-            Loads.extend(new)
+            Loads.extend(new) #This takes the emptied list and makes the new data apart of it.
+            # Don't amend list. That will cause new list to be strange sublist of Loads and will break
+            #the drop down menu.
  
-class Recipe_Editor(tk.Frame):
+class Recipe_Editor(tk.Frame): #This only shows 10 pet loads in the editor. It can be changed if you have more.
     def __init__(self, master, window, window_title):                
         self.master = master
         self.window = window
@@ -122,6 +125,7 @@ class Recipe_Editor(tk.Frame):
         self.tree.column('#8', stretch="no", minwidth=0, width=75)
         self.tree.column('#9', stretch="no", minwidth=0, width=75)
         self.tree.column('#10', stretch="no", minwidth=0, width=75)
+        #If you have more pet loads add more columns by repeating the above patern.
     #Imports data into TreeView at start:
         with open('3_3_Cartridge_Recipe.csv') as f:
             reader = csv.DictReader(f, delimiter=',')
@@ -234,7 +238,7 @@ class Recipe_Editor(tk.Frame):
         for selected_item in self.selected_items:        
             self.tree.delete(selected_item)#Removes selected item from tree
         Update_Recipe_File(self) #Then we over write the old CSV with the new tree.
-
+    
 #when calling the cams. The new window will be a assigned to a Top Level Widget. You assigne the camera input during the
 #Construction.
 class Cam(tk.Frame):
@@ -530,10 +534,8 @@ class Counters(tk.LabelFrame):
         self.primer_count.set(100)
            
     def S1_Counted(self):
-        sleep(.1)
         #Trigers Motor to alternate pulses
         M1.pulse(n=1)
-        sleep(.1)
         M2.pulse(n=1)
         #Triggers Count
         self.Round_Ticker()
@@ -581,7 +583,6 @@ class Alarm (tk.LabelFrame):
     def __init__(self, master):
         tk.LabelFrame.__init__(self, master, text="Cautions")
         self.master = master
-        self.startTime = time.time()
         #These will display in the order written and aligned to the left.
     #Alerts
       #Low Primers
@@ -676,7 +677,7 @@ class Alarm (tk.LabelFrame):
                 if pulsetime <= -1: #Without this the threads wouldn't idle and release lock
                     pass
                 if pulsetime >= 0:
-                    time.sleep(0.2)
+                    time.sleep(.3)
                     pulsetime -= 1
                     print ("Primers Timer = " + str(pulsetime))
                     if pulsetime <= 0:
@@ -707,9 +708,9 @@ class Alarm (tk.LabelFrame):
        pass        
         
     def Low_Cases_Reset(self):
-        Buzzer.off()
         self.low_case_label.configure(bg="green", text = "Good")
-    
+        Buzzer.off()
+
     def Low_Primer_Reset(self):
         self.low_primer_label.configure(bg="green", text = "Good")
         Buzzer.off()
@@ -769,7 +770,9 @@ class App(tk.Tk):
                                  cam2=self.Cam2_Toggle)
         self.cammy.grid(column=0, row=1)  
         self.calls = Alarm(self.middle_frame)
-        self.calls.grid(column=1, row=1)  
+        self.calls.grid(column=1, row=1)
+        self.silence_alarm = ttk.Button(self.middle_frame, text = "Silence", command = lambda: Buzzer.off())
+        self.silence_alarm.grid(column=3, row=1)
         self.middle_frame.grid(column=0, row=3)
 #Fourth Frame
         self.fourth_frame = tk.Frame(self)
@@ -784,14 +787,26 @@ class App(tk.Tk):
         Recipe_Update()
         self.forms.Combo_Update()
         self.recipes_window.destroy()
+    
+    #Required to properly release cams. Otherwise the cams will stay on after closing app.
+    #Built in class clean up for cams doesnt clean up the cams as intended.
+    def Close_Cam(self, cam, toplevel): 
+        self.cam = cam
+        self.toplevel = toplevel
+        cam.vid.vid.release()
+        toplevel.destroy()
 
     def Cam1_Toggle(self):
         self.camera1_window = tk.Toplevel(self)
         self.camera1 = Cam(self, window=self.camera1_window, window_title="Cam1", video_source=0)
+        self.camera1_window.protocol("WM_DELETE_WINDOW", lambda: self.Close_Cam(cam = self.camera1,
+                                      toplevel = self.camera1_window))
 
     def Cam2_Toggle(self):
         self.camera2_window = tk.Toplevel(self)
         self.camera2 = Cam(self, window=self.camera2_window, window_title="Cam1", video_source=1)
+        self.camera1_window.protocol("WM_DELETE_WINDOW", lambda: self.Close_Cam(cam = self.camera2,
+                                      toplevel = self.camera2_window))
   
     def Pet_Loads_Log(self):
         self.recipes_window = tk.Toplevel(self)
