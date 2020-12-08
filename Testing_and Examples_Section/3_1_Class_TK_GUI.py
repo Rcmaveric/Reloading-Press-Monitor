@@ -420,12 +420,12 @@ class FormBox(ttk.LabelFrame):
         finalstring = s.replace(")"," ")
         list = finalstring.split(",")
         self.dictionary={}
-        for i in list:
+        for i in list: # Now like magic (because I only slightly comprehend what happened) a dictionary
             keyvalue = i.split("=")
             m= keyvalue[0].strip('\'')
             m = m.replace("\"", "")
             self.dictionary[m] = keyvalue[1].strip('"\'')
-        
+        #Probably better ways but now dictionaly is used to fill the boxes
         self.caliber_box.insert(0, self.dictionary["caliber"])
         self.bullet_MFG_box.insert(0, self.dictionary["bullet"])
         self.bullet_type_box.insert(0, self.dictionary["bullet_type"])
