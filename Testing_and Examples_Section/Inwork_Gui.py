@@ -30,12 +30,13 @@ S1 = gp.Button(25) #Counter switch
 S2 = gp.Button(8) # Reset Cases
 S3 = gp.Button(7) #Reset Primers
 S4 = gp.Button(24) #Binding prox switches
-M1 = gp.PWMOutputDevice(16, frequency=1) #Primer vibrator
-M2 = gp.PWMOutputDevice(13, frequency=1) #Powder Vibrator
+M1 = gp.PWMOutputDevice(20, frequency=1) #Primer vibrator
+M2 = gp.PWMOutputDevice(21, frequency=1) #Powder Vibrator
 Ldr1 = gp.LightSensor(4) #Low Primer
 Ldr2 = gp.LightSensor(19) #Bullet Feeder
 Ldr3 = gp.LightSensor(26) #Case Feeder  
-# For Passive buzzers use PWM. Active buzzers us Buzzer. Be wise that too high a frequecy will peg out CPU
+# For Passive buzzers use PWM. Active buzzers use Buzzer. Be wise that too high a 
+# frequecy will peg out CPU.
 Buzzer = gp.PWMOutputDevice(18, frequency=1500) 
 #If you relays operate backwards swap the active_high state (default is True).
 #Setting initial_value to false ensures relays start closed enstead of current state.
@@ -197,7 +198,7 @@ class Recipe_Editor(tk.Frame): #This only shows 10 pet loads in the editor. It c
         self.save_data_bt.grid(column=0, row = 3)
         self.data_input_frame.pack(side="bottom")
         
-    #Frame to hold delete button. Wanted and Edit button but that is proving to difficult to figure out
+    #Frame to hold delete button.
         self.button_frame = tk.Frame(self.data_display)
         self.button_frame.pack(side="right")
         self.dellet_data_bt = ttk.Button(self.button_frame, text = "Delete", width=10, command= self.Remove_Item)
@@ -242,6 +243,34 @@ class Recipe_Editor(tk.Frame): #This only shows 10 pet loads in the editor. It c
 #when calling the cams. The new window will be a assigned to a Top Level Widget. You assigne the camera input during the
 #Construction.
 class Cam(tk.Frame):
+    def __init__(self, master, window, window_title, video_source=0):
+        self.master = master
+        self.window = window
+        self.window.title(window_title)
+        self.video_source = video_source
+
+        # open video source (by default this will try to open the computer webcam)
+        self.vid = MyVideoCapture(self.video_source)
+ 
+        # Create a canvas that can fit the above video source size
+        self.canvas = tk.Canvas(window, width = self.vid.width, height = self.vid.height)
+        self.canvas.pack()
+ 
+        # After it is called once, the update method will be automatically called every delay milliseconds
+        self.delay = 15
+        self.update()
+ 
+            
+    def update(self):
+        # Get a frame from the video source
+        ret, frame = self.vid.get_frame()
+
+        if ret:
+            self.photo = ImageTk.PhotoImage(image = Image.fromarray(frame))
+            self.canvas.create_image(0, 0, image = self.photo, anchor = tk.NW)
+
+        self.window.after(self.delay, self.update)
+
     def __init__(self, master, window, window_title, video_source=0):
         self.master = master
         self.window = window
@@ -734,7 +763,7 @@ class App(tk.Tk):
         super().__init__()
         self.title("AMMMO Computer")
 
-#Layout Notes to self:
+ #Layout Notes to self:
         #App Frames for organization of layout so you can see where I am going with the layout.
         #Sub frames will be created before thier widget contents. pictures are worth 1000 words.
         #              /---------------------------------------/
@@ -742,17 +771,19 @@ class App(tk.Tk):
         # Middle Cont. / /-----------------------------------/ /
         # Second Frame / /Counter    /  Logo   /  Powder Lvl / /
         #              / /----------//--------/-/------------/ /
-        # Third Frame  / /Cam Button/ Cautions / Form Buttons/ /
+        # Third Frame  / /Cam Button/ Cautions / Silence But./ /
         #              / /---------/----------/--------------/ /
         # Fourth Fram  / / / / / / /Form/ / / /  / / / /  /  / /
+        #              / /-----------------------------------/ / 
+        #              / /         Form Buttons              / / 
         #              /---------------------------------------/     
 
-#First Frame: I like my computer to great me. Makes me feel needed.
+ #First Frame: I like my computer to great me. Makes me feel needed.
         self.first_frame = tk.Frame(self)
         welcome = tk.Label(self.first_frame, text="Welcome Rcmaveric, lets make some ammo!")
         welcome.pack(fill="both")
         self.first_frame.grid(column=0, row= 0)
-#Middle Container:
+ #Middle Container:
         self.middle_frame = tk.Frame(self)
   #Second Frame:  
     #Counter        
@@ -774,7 +805,7 @@ class App(tk.Tk):
         self.silence_alarm = ttk.Button(self.middle_frame, text = "Silence", command = lambda: Buzzer.off())
         self.silence_alarm.grid(column=3, row=1)
         self.middle_frame.grid(column=0, row=3)
-#Fourth Frame
+ #Fourth Frame
         self.fourth_frame = tk.Frame(self)
         self.forms = FormBox(self.fourth_frame, count=self.counter_box.round_count.get)
         self.forms.pack()
@@ -782,7 +813,7 @@ class App(tk.Tk):
         self.menubar = MenuBar(self, add_remove=self.Pet_Loads_Log,
                                clip_board_copy=self.forms.Write_Load_To_ClipBoard)
         self.config(menu=self.menubar)
-#Commands
+ #Commands
     def Update_Close(self):
         Recipe_Update()
         self.forms.Combo_Update()
