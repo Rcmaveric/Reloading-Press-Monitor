@@ -6,10 +6,13 @@ This has been a fun adventure and I feel I graduated from Newb to Novice working
 
 This is a work in progress as I gain experience in github and python, so bare with me as I learn. Critiques, ideas, and pointers are welcome. I wanted something so I am making it and shareing. Plus the fun of creating something. The end goal is to have something modular and easy to understand that anyone with any level of experience can pick up and enter some user defined inputs and have press monitor to suit their needs for any style press.  
 Tasks left:  
-- [ ] Code Powder Resevior Sensore (awaiting sensor)  
-- [ ] Figure out bullet not present system. May have to    wait till i get my press back.
+- [ ] Code Powder Resevior Sensore (recieved)  
+- [ ] Figure out bullet not present system. May have to wait till i get my press back.
 - [ ] Start figuring out how to make this modular.
-  
+- [ ] Programming LCD. The new LCD was recieved and works.
+- [ ] Contemplatiing a powder cop die sensor. Still in research and design.  
+- [ ] Bullet not present sensor. Still in research and design.
+- [ ] Convince wife to let me get a Dillion to make a full auto press and try out all the posibilities.  
 
 
 ## GUI_Working Folder
@@ -25,10 +28,7 @@ As of right now the functionality is as follows:
     - Both camera buttons work. You must verify your cam buttons device numbers. Plug two usb cams in and see what they are. Then manually input those numbers. Current defaults are 0 and 1. Thats what mine are. 
     - I have not written user manual yet. The file and functionality is there for when I get everything done. This will be the last thing I do.  
     - Current GPIO functionality: Counters work and export correctly. Motors vibrate correctly. Low primer warning works now with timing function, so warning gets set if no primers seen for .2 seconds.  Binding works and works like limit switches and if cycle takes longer than preset amount alert is set (this is for automation). Low case and low bullets work. If feeding takes longer than preset time then alert is set to refill hoppers. Bullet and case feeding functionality works. **For the Alerts:** Clicking the button resets the alerts. So if a lock is written for automation (not yet written) then clicking button would restart the automation. The silence button just shuts off the buzzer you can clear the fault. Then click the button and resume.  
-    - Inwork Functionality: Jmorris needs to stop giving me ideas. Shipping takes weeks to my current location. 
-      - [ ] Awaiting TOF sensor for Powder level. 
-      - [ ] Contemplatiing a powder cop die sensor. Still in research and design.  
-      - [ ] Bullet not present sensor. Still in research and design.  
+
 - 3_2_Relaoding_Log: This is where the form is logged. Removed count entry and count is now pulled from the count box. This file is needed for program to function.  
 - 3_3_Cartridge_Recipe: This is just an example I created of the recipe data base the user can define and call in to prefill entry widgets. This is the file that gets edited when you remove and add pet loads. Also the file you can manually edit if you so choose. This file is also needed for functinality.  
 - TK_Cam.py: An example I found that that I used to veiw the webcams.    
@@ -55,11 +55,24 @@ Where all the working sensors are:
 - This where I keep all the examples and test files I have been using. There is a copy of the 3_1_TkinterGui I keep for reference.  
 - Inwork_Gui.Py is the file I am activel editing and testing. Once functional I copy and past to the 3_1_TkinterGui.
 
+## PCB
+
+All PCBs amd schematics were made with EasyEDA. Its free and not too bad to learn for a newb. Learned a lot about design rules. 
+
+Here are all the PCB designs to incorporate all the electronics neccassy for functionality. The Gerber files are what is needed if you wish to have it proffessional made like I did. The BOM file is a list of all the parts needed. There are schematics for the PCB and a SVG to show a picture preview.
+
+
+## Electronics_Enclosure
+
+Here is the STLs and preview images of the elctronics enclosures I designed. The LCD enclosure is tiltable. The project box is a clam shell design with cuts out for all of the connectors. Both of theses designs are still in the prototype phase and not finnished.
+
 ## Usefull Links
 
 - Link to Thingivers for Lee Low Primer warning sensor houseing.KPK3iF gets full credit for creating it. I tested it and it works great. You just drill a small throught the primer feeder trough:  https://www.thingiverse.com/thing:4303576  
 - In case you wonder how i watch the primers with a bore came: https://www.thingiverse.com/thing:3980090, full credit to RHaggmark for creating it.  
-- If you are wondering how the case feeder connects to my reloading press: https://www.tinkercad.com/things/eshs1PygjrH.  
+- If you are wondering how the case feeder connects to my reloading press: https://www.tinkercad.com/things/eshs1PygjrH. 
+- Link to the TinkerCad Open Source Monitor if you wish to change it : https://www.tinkercad.com/things/efoQFT3AIY3
+- Link to the TinkerCad Open Source Monitor if you wish to change it: https://www.tinkercad.com/things/7L2IhnNIFGC 
 - Case Feeder I use: https://www.thingiverse.com/thing:3607034 use the remixed case dropper.  
 - Bullet Feeder: Sorry everyone Thingiverse took down the OBF again created by AmmoMike.
   
